@@ -11,6 +11,7 @@ class Member():
         self.state = None
         self.zipCode = None
         self.provider = inProvider
+        #add services if provider
 
     #Set name
     def setName(self, inName: str) -> bool:
