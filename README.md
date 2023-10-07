@@ -12,6 +12,3 @@ Each record holds a provider and a member, as well as some other info
 The member class can be used for either a provider or a member, with a bool that indicates which it is
 
 *Rough Draft* - Just what I thought made sense and needed the least amount of classes
-
-
-Abdirizak Duale Test to see if my branch works properly
