@@ -1,6 +1,5 @@
 #Record class (to write to disk)
 
-import Member 
 import datetime
 
 class Record():
