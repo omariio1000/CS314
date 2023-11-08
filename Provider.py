@@ -20,6 +20,15 @@ class Provider(Member):
         self.services.append(Service)
         return True
 
-    def removeService(self, inService: Service) -> bool:
-        if (self.services.__contains__(inService)):
+    def removeService(self, inCode: int) -> bool:
+        if (inCode < 0):
+            print("Fatal error")
+            return False
+        
+        for service in self.services:
+            if (service.code == inCode):
+                self.services.remove(service)
+                return True
             
+        print("The provider doesn't offer this service")
+        return False
