@@ -1,7 +1,7 @@
 #Provider class
 
-import Member
-import Service
+from Member import Member
+from Service import Service
 
 
 class Provider(Member):
