@@ -11,15 +11,24 @@ providers = dict()
 
 def managerMode():
     print("\nWelcome to manager mode.")
+    return
 
 def providerMode():
     print("\nWelcome to provider mode.")
+    return
+
+def addFiles():
+    script_dir = os.path.dirname(__file__) #absolute dir
+
+    return
 
 def main():
 
+    addFiles()
+
     '''
     TO-DO LIST:
-        FILE HANDLING STUFF FIRST
+        FILE HANDLING STUFF FIRST - OMAR
             CHECK SERVICE DIRECTORY FOR SERVICES
             CHECK PROVIDER DIRECTORY FOR PROVIDERS
             CHECK MEMBER DIRECTORY FOR MEMBER
@@ -49,7 +58,6 @@ def main():
             DIFFERENT FILE HANDLING (.JSON, DATABSE, ETC)
 
     '''    
-   
 
     print("Welcome to ChocAn!")
     running = True
