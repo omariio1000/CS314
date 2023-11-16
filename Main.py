@@ -18,7 +18,28 @@ def providerMode():
     return
 
 def addFiles():
-    script_dir = os.path.dirname(__file__) #absolute dir
+    scriptDir = os.path.dirname(__file__) #absolute dir
+    recordDir =  scriptDir + "/Records"
+    serviceDir =  scriptDir + "/Services"
+    memberDir =  scriptDir + "/Members"
+    providerDir =  scriptDir + "/Providers"
+
+    extRecords = os.listdir(recordDir)
+    extServices = os.listdir(serviceDir)
+    extMembers = os.listdir(memberDir)
+    extProviders = os.listdir(providerDir)
+
+    for file in extRecords:
+        break
+
+    for file in extServices:
+        break
+
+    for file in extMembers:
+        break
+
+    for file in extProviders:
+        break
 
     return
 
