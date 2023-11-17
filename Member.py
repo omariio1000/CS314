@@ -1,18 +1,18 @@
-#Member/provider class, since they share all the same data members
-#could possibly be confusing
+#Member class
 
 class Member():
     #constructor, defaults to member not provider
-    def __init__(self, inProvider: bool = False):
-        self.name = None
-        self.number = None
-        self.address = None
-        self.city = None
-        self.state = None
-        self.zipCode = None
-        self.provider = inProvider
-        #add services if provider
-
+    def __init__(self, inName: str = None, inNumber: int = None, inAddress: str = None,
+                 inCity: str = None, inState: str = None, inZip: int = None, inStatus: int = None):
+        
+        self.name = inName
+        self.number = inNumber
+        self.address = inAddress
+        self.city = inCity
+        self.state = inState
+        self.zipCode = inZip
+        self.status = inStatus
+    
     #Set name
     def setName(self, inName: str) -> bool:
         if (len(inName) > 25):
@@ -65,4 +65,13 @@ class Member():
             return False
         
         self.zipCode = inZip
+        return True
+    
+    #Set status
+    def setStatus(self, inStatus: int) -> bool:
+        if (inStatus > 2 or inStatus < 0):
+            print("Invalid status!")
+            return False
+        
+        self.status = inStatus
         return True

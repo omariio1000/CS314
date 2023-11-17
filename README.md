@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 CS314
 Chocaholics Anonymous
 
@@ -14,3 +15,7 @@ The member class can be used for either a provider or a member, with a bool that
 *Rough Draft* - Just what I thought made sense and needed the least amount of classes
 
 Test to see if i'm in my branch
+=======
+CS314
+Chocaholics Anonymous
+>>>>>>> master
