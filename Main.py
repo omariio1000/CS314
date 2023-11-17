@@ -2,9 +2,10 @@ from Member import Member
 from Provider import Provider
 from Service import Service
 from Record import Record
+from datetime import datetime
 import os
 
-records = dict()
+records = []
 services = dict()
 members = dict()
 providers = dict()
@@ -19,27 +20,167 @@ def providerMode():
 
 def addFiles():
     scriptDir = os.path.dirname(__file__) #absolute dir
-    recordDir =  scriptDir + "/Records"
-    serviceDir =  scriptDir + "/Services"
-    memberDir =  scriptDir + "/Members"
-    providerDir =  scriptDir + "/Providers"
+    recordDir =  scriptDir + "/Records/"
+    serviceDir =  scriptDir + "/Services/"
+    memberDir =  scriptDir + "/Members/"
+    providerDir =  scriptDir + "/Providers/"
 
     extRecords = os.listdir(recordDir)
     extServices = os.listdir(serviceDir)
     extMembers = os.listdir(memberDir)
     extProviders = os.listdir(providerDir)
 
-    for file in extRecords:
-        break
+    for extRecord in extRecords:
+        # print(recordDir + extRecord)
+        file = open(recordDir + extRecord, "r")
+        fileData = file.readlines()
+        
+        #removing \n characters from strings
+        count = 0
+        for data in fileData:
+            if (data[-1] == '\n'):
+                fileData[count] = data[:-1]
+            count += 1
+        
+        currentTime = datetime.strptime(extRecord[:-4], '%Y_%m_%d_%H_%M_%S')
+        # print(currentTime)
 
-    for file in extServices:
-        break
+        serviceDate = datetime.strptime(fileData[0], '%Y_%m_%d')
+        # print(serviceDate)
 
-    for file in extMembers:
-        break
+        providerId = int(fileData[1])
+        # print("{:06d}".format(providerId))
+        
+        memberId = int(fileData[2])
+        # print("{:06d}".format(memberId))
+        
+        serviceCode = int(fileData[3])
+        # print("{:06d}".format(serviceCode))
 
-    for file in extProviders:
-        break
+        bill = float(fileData[4])
+        # print("{:.2f}".format(bill))
+
+        comments = ""
+        if (fileData[4] != fileData[-1]):
+            comments = fileData[5]
+            # print(comments)
+        else:
+            comments = None
+
+        newRecord = Record(currentTime, serviceDate, providerId, memberId, serviceCode, bill, comments)
+        records.append(newRecord)
+
+
+    for extService in extServices:
+        # print(serviceDir + extService)
+        file = open(serviceDir + extService, "r")
+        fileData = file.readlines()
+        
+        #removing \n characters from strings
+        count = 0
+        for data in fileData:
+            if (data[-1] == '\n'):
+                fileData[count] = data[:-1]
+            count += 1
+
+        code = int(fileData[0])
+        # print("{:06d}".format(code))
+
+        name = fileData[1]
+        # print(name)
+
+        desc = fileData[2]
+        # print(desc)
+
+        cost = float(fileData[3])
+        # print("{:.2f}".format(cost))
+
+        newService = Service(code, name, desc, cost)
+        services[code] = newService
+    
+    # print(services)
+
+    for extMember in extMembers:
+        # print(memberDir + extMember)
+        file = open(memberDir + extMember, "r")
+        fileData = file.readlines()
+        
+        #removing \n characters from strings
+        count = 0
+        for data in fileData:
+            if (data[-1] == '\n'):
+                fileData[count] = data[:-1]
+            count += 1
+
+        name = fileData[0]
+        # print(name)
+
+        number = int(fileData[1])
+        # print("{:06d}".format(number))
+
+        address = fileData[2]
+        # print(address)
+
+        city = fileData[3]
+        # print(city)
+
+        state = fileData[4]
+        # print(state)
+
+        zip = int(fileData[5])
+        # print(zip)
+
+        status = int(fileData[6])
+        # print(status)
+
+        newMember = Member(name, number, address, city, state, zip, status)
+        members[number] = newMember
+
+    # print(members)
+
+    for extProvider in extProviders:
+        # print(providerDir + extProvider)
+        file = open(providerDir + extProvider, "r")
+        fileData = file.readlines()
+        
+        #removing \n characters from strings
+        count = 0
+        for data in fileData:
+            if (data[-1] == '\n'):
+                fileData[count] = data[:-1]
+            count += 1
+
+        name = fileData[0]
+        # print(name)
+
+        number = int(fileData[1])
+        # print("{:06d}".format(number))
+
+        address = fileData[2]
+        # print(address)
+
+        city = fileData[3]
+        # print(city)
+
+        state = fileData[4]
+        # print(state)
+
+        zip = int(fileData[5])
+        # print(zip)
+
+        status = int(fileData[6])
+        # print(status)
+
+        newProvider = Provider(name, number, address, city, state, zip, status)
+
+        serviceList = fileData[7].split(",")
+        for service in serviceList:
+            # print("{:06d}".format(int(service)))
+            newProvider.addService(int(service))
+
+        providers[number] = newProvider
+
+    # print(providers)
 
     return
 
@@ -49,11 +190,11 @@ def main():
 
     '''
     TO-DO LIST:
-        FILE HANDLING STUFF FIRST - OMAR
-            CHECK SERVICE DIRECTORY FOR SERVICES
-            CHECK PROVIDER DIRECTORY FOR PROVIDERS
-            CHECK MEMBER DIRECTORY FOR MEMBER
-            CHECK RECORD DIRECTORY FOR RECORDS
+        FILE HANDLING STUFF FIRST - DONE
+            CHECK SERVICE DIRECTORY FOR SERVICES - DONE
+            CHECK PROVIDER DIRECTORY FOR PROVIDERS - DONE
+            CHECK MEMBER DIRECTORY FOR MEMBER - DONE
+            CHECK RECORD DIRECTORY FOR RECORDS - DONE
 
         MANAGER MODE
             ADDING/MODIFYING MEMBERS

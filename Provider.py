@@ -1,7 +1,6 @@
 #Provider class
 
 from Member import Member
-from Service import Service
 
 
 class Provider(Member):
@@ -12,23 +11,20 @@ class Provider(Member):
         Member.__init__(self, inName, inNumber, inAddress, inCity, inState, inZip, inStatus)
         self.services = []
 
-    def addService(self, inService: Service) -> bool:
-        if (Service == None):
+    def addService(self, inService: int) -> bool:
+        if (inService < 0):
             print("Fatal error")
             return False
         
-        self.services.append(Service)
+        self.services.append(inService)
         return True
 
     def removeService(self, inCode: int) -> bool:
-        if (inCode < 0):
-            print("Fatal error")
+        try:
+            self.services.remove(inCode)
+        except ValueError as ve:  
+            print("The provider doesn't offer this service")
             return False
         
-        for service in self.services:
-            if (service.code == inCode):
-                self.services.remove(service)
-                return True
-            
-        print("The provider doesn't offer this service")
-        return False
+        print("Service removed")
+        return True

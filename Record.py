@@ -1,6 +1,6 @@
 #Record class (to write to disk)
 
-import datetime
+from datetime import datetime
 
 class Record():
     def __init__(self, inTime: datetime = None, inServiceDate: datetime = None, inProv: int = None, 
@@ -14,8 +14,12 @@ class Record():
         self.bill = inBill
         self.comments = inComments
 
-    def setTime(self, inTime: datetime) -> None:
-        self.currentTime = datetime.datetime.now()
+    def setTime(self, inTime: datetime = None) -> None:
+        if (inTime == None):
+            self.currentTime = datetime.datetime.now()
+            return
+        
+        self.currentTme = inTime
         return
     
     def setDate(self, inDate: datetime) -> None:
