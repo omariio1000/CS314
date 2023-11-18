@@ -3,16 +3,13 @@ from Provider import Provider
 from Service import Service
 from Record import Record
 from datetime import datetime
+from Manager import manager
 import os
 
 records = []
 services = dict()
 members = dict()
 providers = dict()
-
-def managerMode():
-    print("\nWelcome to manager mode.")
-    return
 
 def providerMode():
     print("\nWelcome to provider mode.")
@@ -185,7 +182,6 @@ def addFiles():
     return
 
 def main():
-
     addFiles()
 
     '''
@@ -227,6 +223,7 @@ def main():
     running = True
 
     while(running):
+        manager_mode = manager(providers, members, records)
         print("\nOptions:")
         print("1: Manager Mode")
         print("2: Provider Mode")
@@ -235,7 +232,7 @@ def main():
         choice = int(input("Select your mode: "))
         
         if (choice == 1):
-            managerMode()
+            manager_mode.welcome()
 
         elif (choice == 2):
             providerMode()
