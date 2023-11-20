@@ -16,7 +16,73 @@ def managerMode():
 
 def providerMode():
     print("\nWelcome to provider mode.")
+    print("\n1. Verify member id")
+    print("\n2. Generate Records")
+    print("\n3. Create a Record")
+
+    choice = int(input("\nSelect your decision: "))
+    
+    if(choice == 1) :
+        verifyID()
+
+    if(choice == 2) :
+        generateRecords()
+    
+    if(choice == 3) : 
+        createRecords()
+
+    else :
+        print("\nPlease enter 1 or 2!")
+
     return
+
+def verifyID() :
+    ID = int(input("\nEnter the ID of the member: "))
+    
+    for key in members :
+        if(members[key].number == ID) :
+            print("\nValidated")
+            
+        elif (members[key].status > 2 or members[key].status < 0) :
+            print("\nSuspended")
+
+        else :
+            print("\nInvalidated")
+
+def generateRecords() :
+    
+    for key in records :
+        print("-" * 100)
+        print(f"Current: {key.currentTime},")
+        print(f"Service Date: {key.serviceDate},")
+        print(f"Provider ID: {key.providerID},")
+        print(f"Member ID: {key.memberID},")
+        print(f"Service Code: {key.serviceCode},")
+        print(f"Bill: {key.bill},")
+        print(f"Comments: {key.comments}")
+        print("-" * 100)
+        
+def createRecords() :
+   print("You're creating a record, please follow instructions below") 
+
+   
+   currentTime = str(input("Enter Current Time: (YYYY/MM/DD/HH/MM/SS): "))
+
+   serviceDate = str(input("Enter Service Date (YYYY/MM/DD): "))
+
+   providerId = int(input("Enter Provider ID: "))
+
+   memberId = int(input("Enter Member ID: "))
+
+   serviceCode = int(input("Enter Service Code: "))
+
+   bill = float(input("Enter bill: "))
+   
+   comments = str(input("Enter any comments please: " ))
+   
+   newRecord = Record(currentTime, serviceDate, providerId, memberId, serviceCode, bill, comments)
+   records.append(newRecord)
+
 
 def addFiles():
     scriptDir = os.path.dirname(__file__) #absolute dir
