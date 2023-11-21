@@ -40,7 +40,7 @@ def verifyID() :
     ID = int(input("\nEnter the ID of the member: "))
     
     if members.get(ID) is not None:
-        if(members[ID].status > 2 or members[ID].status < 0) :
+        if(members[ID].status == 2) :
             print("\nSuspended")
         else :
             print("\nValidated")
