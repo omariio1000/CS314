@@ -39,15 +39,13 @@ def providerMode():
 def verifyID() :
     ID = int(input("\nEnter the ID of the member: "))
     
-    for key in members :
-        if(members[key].number == ID) :
-            print("\nValidated")
-            
-        elif (members[key].status > 2 or members[key].status < 0) :
+    if members.get(ID) is not None:
+        if(members[ID].status > 2 or members[ID].status < 0) :
             print("\nSuspended")
-
         else :
-            print("\nInvalidated")
+            print("\nValidated")
+    else :
+        print("\nInvalid ID number")
 
 def generateRecords() :
     
