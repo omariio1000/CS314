@@ -221,8 +221,8 @@ def main():
 
     print("Welcome to ChocAn!")
     running = True
-
     while(running):
+       #print(members[1].number)
         manager_mode = manager(providers, members, records)
         print("\nOptions:")
         print("1: Manager Mode")

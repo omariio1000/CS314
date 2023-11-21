@@ -28,3 +28,5 @@ class Provider(Member):
         
         print("Service removed")
         return True
+    
+    #Add setter functions here#
