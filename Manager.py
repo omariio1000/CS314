@@ -6,7 +6,7 @@ class manager:
     # Constructor
     def __init__(self, providers=None, members=None, records=None):
         self.providers = providers
-        self.members = members
+        self.members = members if members is not None else {}
         self.records = records
         test = Member("Najiib", 123, "nowhere", "Portland", "Oregon", 97213, 1)
         self.members[test.number] = test
@@ -127,6 +127,7 @@ class manager:
         temp.setStatus(1)
         # Add to member dict
         self.members[temp.number] = temp
+        return temp.number
 
     # Remove a member from dict
     def remove_member(self):
@@ -167,6 +168,7 @@ class manager:
         # Add to provider dict
         self.providers[temp.number] = temp
 
+    #Remove provider
     def remove_provider(self):
         id = int(input("\nPlease enter the name of the provider you'd like to remove\n"))
         if(self.search_provider(id)):
