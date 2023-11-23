@@ -8,11 +8,24 @@ class Record():
         
         self.currentTime = inTime
         self.serviceDate = inServiceDate
-        self.providerID = inProv
-        self.memberID = inMem
-        self.serviceCode = inServ
-        self.bill = inBill
-        self.comments = inComments
+
+        self.providerID = None
+        self.memberID = None
+        self.serviceCode = None
+        self.bill = None
+        self.comments = None
+
+        ret = True
+        ret = (ret and self.setProv(inProv))
+        ret = (ret and self.setMem(inMem))
+        ret = (ret and self.setCode(inServ))
+        ret = (ret and self.setBill(inBill))
+        
+        if (inComments != None):
+            ret = (ret and self.setComments(inComments))
+        
+        if not (ret):
+            raise ValueError
 
     def setTime(self, inTime: datetime = None) -> None:
         if (inTime == None):
@@ -27,7 +40,7 @@ class Record():
         return
     
     def setProv(self, inProv: int) -> bool:
-        if (len(str(inProv)) != 9):
+        if (0 > inProv > 999999999):
             print("Provider ID must be 9 digits long!")
             return False
         
@@ -35,7 +48,7 @@ class Record():
         return True
     
     def setMem(self, inMem: int) -> bool:
-        if (len(str(inMem)) != 9):
+        if (0 >inMem > 999999999):
             print("Member ID must be 9 digits long!")
             return False
         
@@ -43,8 +56,8 @@ class Record():
         return True
 
     def setCode(self, inCode: int) -> bool:
-        if (len(str(inCode)) != 6):
-            print("Service code must be 6 digits long!")
+        if (0 > inCode > 999999999):
+            print("Service code must be 9 digits long!")
             return False
         
         self.code = inCode
