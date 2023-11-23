@@ -194,8 +194,13 @@ def addFiles():
         zip = int(fileData[5])
         # print(zip)
 
-        status = int(fileData[6])
-        # print(status)
+        statusInt = int(fileData[6])
+        # print(statusInt)
+
+        status = True
+        if (statusInt == 0):
+            status = False
+        #print(status)
 
         newMember = Member(name, number, address, city, state, zip, status)
         members[number] = newMember
@@ -232,8 +237,13 @@ def addFiles():
         zip = int(fileData[5])
         # print(zip)
 
-        status = int(fileData[6])
-        # print(status)
+        statusInt = int(fileData[6])
+        # print(statusInt)
+
+        status = True
+        if (statusInt == 0):
+            status = False
+        #print(status)
 
         newProvider = Provider(name, number, address, city, state, zip, status)
 

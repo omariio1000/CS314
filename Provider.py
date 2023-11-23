@@ -16,6 +16,10 @@ class Provider(Member):
             print("Fatal error")
             return False
         
+        if (self.services.__contains__(inService)):
+            print("Already offering this service")
+            return False
+        
         self.services.append(inService)
         return True
 
