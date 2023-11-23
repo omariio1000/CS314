@@ -6,8 +6,9 @@ class Record():
     def __init__(self, inTime: datetime = None, inServiceDate: datetime = None, inProv: int = None, 
                  inMem: int = None, inServ: int = None, inBill: float = None, inComments: str = None):
         
-        self.currentTime = inTime
-        self.serviceDate = inServiceDate
+        self.currentTime = None
+        self.setTime(inTime)
+
 
         self.providerID = None
         self.memberID = None
@@ -16,6 +17,7 @@ class Record():
         self.comments = None
 
         ret = True
+        ret = (ret and self.setDate(inServiceDate))
         ret = (ret and self.setProv(inProv))
         ret = (ret and self.setMem(inMem))
         ret = (ret and self.setCode(inServ))
@@ -35,9 +37,13 @@ class Record():
         self.currentTme = inTime
         return
     
-    def setDate(self, inDate: datetime) -> None:
+    def setDate(self, inDate: datetime) -> bool:
+        if (inDate == None):
+            print("Invalid date!")
+            return False
+        
         self.serviceDate = inDate
-        return
+        return True
     
     def setProv(self, inProv: int) -> bool:
         if (0 > inProv > 999999999):
