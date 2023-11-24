@@ -3,15 +3,26 @@
 class Member():
     #constructor, defaults to member not provider
     def __init__(self, inName: str = None, inNumber: int = None, inAddress: str = None,
-                 inCity: str = None, inState: str = None, inZip: int = None, inStatus: int = None):
+                 inCity: str = None, inState: str = None, inZip: int = None, inStatus: bool = None):
         
-        self.name = inName
-        self.number = inNumber
-        self.address = inAddress
-        self.city = inCity
-        self.state = inState
-        self.zipCode = inZip
+        self.name = None
+        self.number = None
+        self.address = None
+        self.city = None
+        self.state = None
+        self.zipCode = None
         self.status = inStatus
+
+        ret = True
+        ret = (ret and self.setName(inName))
+        ret = (ret and self.setNumber(inNumber))
+        ret = (ret and self.setAddr(inAddress))
+        ret = (ret and self.setCity(inCity))
+        ret = (ret and self.setState(inState))
+        ret = (ret and self.setZip(inZip))
+        
+        if not (ret):
+            raise ValueError
     
     #Set name
     def setName(self, inName: str) -> bool:
@@ -24,8 +35,8 @@ class Member():
     
     #Set member/provider number
     def setNumber(self, inNumber: int) -> bool:
-        if (len(str(inNumber)) != 9):
-            print("Member number must be 9 digits long!")
+        if (0 > inNumber > 999999999):
+            print("Member number must be maximum 9 digits long!")
             return False
 
         self.number = inNumber
@@ -60,7 +71,7 @@ class Member():
     
     #Set zip code
     def setZip(self, inZip: int) -> bool:
-        if (len(str(inZip)) != 5):
+        if (0 > inZip > 99999):
             print("Zip code must be 5 digits long!")
             return False
         
@@ -68,10 +79,5 @@ class Member():
         return True
     
     #Set status
-    def setStatus(self, inStatus: int) -> bool:
-        if (inStatus > 2 or inStatus < 0):
-            print("Invalid status!")
-            return False
-        
+    def setStatus(self, inStatus: bool) -> None:     
         self.status = inStatus
-        return True

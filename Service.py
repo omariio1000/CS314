@@ -2,14 +2,23 @@
 
 class Service():
     def __init__(self, inCode: int = None, inName: str = None, inDesc: str = None, inCost: float = None):
-        self.code = inCode
-        self.name = inName
-        self.desc = inDesc
-        self.cost = inCost
+        self.code = None
+        self.name = None
+        self.desc = None
+        self.cost = None
+
+        ret = True
+        ret = (ret and self.setCode(inCode))
+        ret = (ret and self.setName(inName))
+        ret = (ret and self.setDesc(inDesc))
+        ret = (ret and self.setCost(inCost))
+        
+        if not (ret):
+            raise ValueError
 
     def setCode(self, inCode: int) -> bool:
-        if (len(str(inCode)) != 6):
-            print("Service code must be 6 digits long!")
+        if (0 > inCode > 999999999):
+            print("Service code must be 9 digits long!")
             return False
         
         self.code = inCode
@@ -24,7 +33,7 @@ class Service():
         return True
 
     def setDesc(self, inDesc: str) -> bool:
-        if (len(inDesc > 100)):
+        if (len(inDesc) > 100):
             print("Description must be <= 100 characters!")
             return False
         
@@ -32,8 +41,9 @@ class Service():
         return True
     
     def setCost(self, inCost: float) -> bool:
-        if (inCost > 999.99):
+        if (0 > inCost > 999.99):
             print("Can't cost that much!")
             return False
         
         self.cost = inCost
+        return True
