@@ -16,7 +16,90 @@ def managerMode():
 
 def providerMode():
     print("\nWelcome to provider mode.")
+    print("\n1. Verify member id")
+    print("\n2. Print Records")
+    print("\n3. Create a Record")
+
+    choice = int(input("\nSelect your decision: "))
+    
+    if(choice == 1) :
+        verifyID()
+
+    if(choice == 2) :
+        provID = int(input("\nWhat is your provider ID: "))
+        printRecords(provID)
+    
+    if(choice == 3) : 
+        createRecords()
+
+    else :
+        print("\nPlease enter 1, 2, or 3!")
+
     return
+
+def verifyID() :
+    ID = int(input("\nEnter the ID of the member: "))
+    
+    if members.get(ID) is not None:
+        if(members[ID].status == True) :
+            print("\nSuspended")
+        else :
+            print("\nValidated")
+    else :
+        print("\nInvalid ID number")
+
+def printRecords(provID) :
+    
+    for key in records :
+        if key.providerID == provID :
+            print("-" * 100)
+            print(f"Current: {key.currentTime},")
+            print(f"Service Date: {key.serviceDate},")
+            print(f"Provider ID: {key.providerID},")
+            print(f"Member ID: {key.memberID},")
+            print(f"Service Code: {key.serviceCode},")
+            print(f"Bill: {key.bill},")
+            print(f"Comments: {key.comments}")
+            print("-" * 100)
+        else :
+            print("\nNo records found for the given provider ID.")
+        
+def createRecords() :
+   
+   # Layaal please make this write to a file, if you need help just let me know on discord - Abdirizak 
+    
+    print("You're creating a record, please follow instructions below") 
+
+    try:
+        time_input = input("Enter Current Time (YYYY/MM/DD/HH/MM/SS) or 'now' for current time: ")
+
+        if time_input.lower() == 'now':
+           currentTime = datetime.now()
+        else:
+           try:
+               currentTime = datetime.strptime(time_input, "%Y/%m/%d/%H/%M/%S")
+           except ValueError:
+               print("Incorrect time format. Record will not be created.")
+               return
+
+        serviceDate = str(input("Enter Service Date (YYYY/MM/DD): "))
+
+        providerId = int(input("Enter Provider ID: "))
+
+        memberId = int(input("Enter Member ID: "))
+
+        serviceCode = int(input("Enter Service Code: "))
+
+        bill = float(input("Enter bill: "))
+
+        comments = str(input("Enter any comments please: " ))
+           
+        newRecord = Record(currentTime, serviceDate, providerId, memberId, serviceCode, bill, comments)
+        records.append(newRecord)
+
+    except ValueError: 
+        print("An error has occured Record will not be created.")
+
 
 def addFiles():
     scriptDir = os.path.dirname(__file__) #absolute dir
