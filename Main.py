@@ -2,6 +2,7 @@ from Member import Member
 from Provider import Provider
 from Service import Service
 from Record import Record
+from Manager import manager
 from datetime import datetime
 from Manager import manager
 import os

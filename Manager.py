@@ -8,7 +8,7 @@ class manager:
         self.providers = providers
         self.members = members if members is not None else {}
         self.records = records
-        test = Member("Najiib", 123, "nowhere", "Portland", "Oregon", 97213, 1)
+        test = Member("Najiib", 123, "nowhere", "Portland", "OR", 97213, 1)
         self.members[test.number] = test
 
     def welcome(self):
