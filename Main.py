@@ -17,7 +17,7 @@ def managerMode():
 def providerMode():
     print("\nWelcome to provider mode.")
     print("\n1. Verify member id")
-    print("\n2. Generate Records")
+    print("\n2. Print Records")
     print("\n3. Create a Record")
 
     choice = int(input("\nSelect your decision: "))
