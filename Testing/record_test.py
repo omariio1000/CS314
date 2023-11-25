@@ -14,59 +14,76 @@ def test_contructor_empty():
 
 
 def test_contructor_vals():
-    aDate = Date
-    test = Record("a time",29, "a providerID", "a memberID", "OR", 97000, True)
-    assert test.currentTime == "a time"
-    assert test.serviceDate == 29
-    assert test.providerID == "a providerID"
-    assert test.memberID == "a memberID"
-    assert test.serviceCode == "OR"
-    assert test.bill == 97000
-    assert test.comments == True
+    dateString = '09-19-2022'
+    dateTest = datetime.strptime(dateString, '%m-%d-%Y').date()
+    timeString = '13::55::26'
+    timeTest = datetime.strptime(timeString, '%H::%M::%S').time()
+
+
+    test = Record(timeTest, dateTest, 29, 2929, 292929, 2.9, "a comment")
+    assert test.currentTime == timeTest
+    assert test.serviceDate == dateTest
+    assert test.providerID == 29
+    assert test.memberID == 2929
+    assert test.serviceCode == 292929
+    assert test.bill == 2.9
+    assert test.comments == "a comment"
 
 def test_wrong_type():
+    dateString = '09-19-2022'
+    dateTest = datetime.strptime(dateString, '%m-%d-%Y').date()
+    timeString = '13::55::26'
+    timeTest = datetime.strptime(timeString, '%H::%M::%S').time()
     with pytest.raises(TypeError):
-        Record("a time", "29", "a providerID", "a memberID", "OR", 97000, True)
+        Record(timeTest, dateTest, "29", 2929, 292929, 2.9, "a comment")
 
 def test_wrong_value():
+    dateString = '09-19-2022'
+    dateTest = datetime.strptime(dateString, '%m-%d-%Y').date()
+    timeString = '13::55::26'
+    timeTest = datetime.strptime(timeString, '%H::%M::%S').time()
     with pytest.raises(ValueError):
-        Record("a time", 29, "a providerID", "a memberID", "a serviceCode", 97000, True)
+        Record(timeTest, dateTest, 29, 2929, 292929, 2999.9, "a comment")
 
 
 def test_setters_time():
     test = Record()
-    assert test.setTime("a time") == True
-    assert test.currentTime == "a time"
+    timeString = '13::55::26'
+    timeTest = datetime.strptime(timeString, '%H::%M::%S').time()
+    test.setTime(timeTest)
+    assert test.currentTime == timeTest
 
 def test_setters_date():
     test = Record()
-    assert test.setDate(29) == True
-    assert test.serviceDate == 29
+    dateString = '09-19-2022'
+    dateTest = datetime.strptime(dateString, '%m-%d-%Y').date()
+    assert test.setDate(dateTest) == True
+    assert test.serviceDate == dateTest
 
 def test_setters_provider():
     test = Record()
-    assert test.setProv("a providerID") == True
-    assert test.providerID == "a providerID"
+    assert test.setProv(29) == True
+    assert test.providerID == 29
 
 def test_setters_memberID():
     test = Record()
-    assert test.setMem("a memberID") == True
-    assert test.memberID == "a memberID"
+    assert test.setMem(2929) == True
+    assert test.memberID == 2929
 
 def test_setters_serviceCode():
     test = Record()
-    assert test.setCode("OR") == True
-    assert test.serviceCode == "OR"
+    assert test.setCode(292929) == True
+    assert test.serviceCode == 292929
 
 def test_setters_bill():
     test = Record()
-    assert test.setBill(97000) == True
-    assert test.bill == 97000
+    assert test.setBill(2.9) == True
+    assert test.bill == 2.9
 
 def test_setters_comments():
     test = Record()
-    test.setComments(True)
-    assert test.comments == True
+    test.setComments("a comment") == True
+    assert test.comments == "a comment"
 
 
 
@@ -83,57 +100,59 @@ def test_setters_date_incorrect():
 def test_setters_provider_incorrect():
     test = Record()
     with pytest.raises(TypeError):
-        test.setProv(29)
+        test.setProv("29")
 
 def test_setters_memberID_incorrect():
     test = Record()
     with pytest.raises(TypeError):
-        test.setMem(29)
+        test.setMem("29")
 
 def test_setters_serviceCode_incorrect():
     test = Record()
     with pytest.raises(TypeError):
-        test.setCode(29)
+        test.setCode("29")
 
 def test_setters_bill_incorrect():
     test = Record()
     with pytest.raises(TypeError):
         test.setBill("29")
 
-#def test_setters_comments_incorrect():
-#    test = Record()
-#    with pytest.raises(ValueError):
-#        test.setComments(5)
+def test_setters_comments_incorrect():
+    test = Record()
+    with pytest.raises(ValueError):
+        test.setComments(5)
 
 
 
 
 def test_setters_time_incorrect_value():
     test = Record()
-    assert test.setTime("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == False
+    with pytest.raises(AttributeError):
+        test.setTime()
 
-#def test_setters_date_incorrect_value():
-#    test = Record()
-#   assert test.setDate(1000000000) == False
+def test_setters_date_incorrect_value():
+    test = Record()
+    with pytest.raises(ValueError):
+        test.setTime()
 
 def test_setters_provider_incorrect_value():
     test = Record()
-    assert test.setProv("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == False
+    assert test.setProv(1000000000) == False
 
 def test_setters_memberID_incorrect_value():
     test = Record()
-    assert test.setMem("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == False
+    assert test.setMem(1000000000) == False
 
 def test_setters_serviceCode_incorrect_value():
     test = Record()
-    assert test.setCode("AAA") == False
+    assert test.setCode(1000000000) == False
 
-#def test_setters_bill_incorrect_value():
-#    test = Record()
-#    assert test.setBill(1000000000) == False
+def test_setters_bill_incorrect_value():
+    test = Record()
+    assert test.setBill(2999.9) == False
 
-#def test_setters_comments_incorrect_value():
-#    test = Record()
-#    with pytest.raises(TypeError):
-#        test.setComments("29")
+def test_setters_comments_incorrect_value():
+    test = Record()
+    assert test.setComments("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == False
+
 

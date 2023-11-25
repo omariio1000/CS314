@@ -38,7 +38,7 @@ class Record():
             self.currentTime = datetime.datetime.now()
             return
         
-        self.currentTme = inTime
+        self.currentTime = inTime
         return
     
     def setDate(self, inDate: datetime) -> bool:
@@ -70,7 +70,7 @@ class Record():
             print("Service code must be 9 digits long!")
             return False
         
-        self.code = inCode
+        self.serviceCode = inCode
         return True
     
     def setBill(self, inBill: float) -> bool:
