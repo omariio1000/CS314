@@ -100,7 +100,7 @@ def test_setters_zip_code_incorrect():
 
 #def test_setters_status_incorrect():
 #    test = Member()
-#    with pytest.raises(TypeError):
+#    with pytest.raises(ValueError):
 #        test.setStatus(5)
 
 

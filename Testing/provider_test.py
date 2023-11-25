@@ -11,3 +11,7 @@ def test_addService_incorrect():
     test = Provider()
     with pytest.raises(TypeError):
         test.addService("29") 
+
+def test_addService_incorrect_below_zero():
+    test = Provider()
+    assert test.addService(-5) == False
