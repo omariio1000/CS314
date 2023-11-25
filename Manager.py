@@ -8,8 +8,6 @@ class manager:
         self.providers = providers
         self.members = members if members is not None else {}
         self.records = records
-        test = Member("Najiib", 123, "nowhere", "Portland", "OR", 97213, 1)
-        self.members[test.number] = test
 
     def welcome(self):
         # Variables
@@ -25,7 +23,7 @@ class manager:
         print("To generate reports please enter 7")
         choice = int(input())
         # Error Check
-        if choice not in [1, 2, 3, 4, 5, 6, 7]:
+        if choice not in [1, 2, 3, 4, 5, 6, 7, 8]:
             print(f"Invalid input: {choice}")
             return 0
         elif (choice == 1):
@@ -40,17 +38,21 @@ class manager:
             self.remove_member()
         elif(choice == 6):
             self.remove_provider()
+        elif(choice == 7):
+            self.display_prov()
+        elif(choice == 8):
+            self.display_member()
         return 1
 
     # Edit member info
     def edit_member(self):
         # Prompt User
-        id_number = input("Please enter in the ID number of the member\n")
+        id_number = int(input("Please enter in the ID number of the member\n"))
         # Search for member
         if (self.search_member(id_number) is True):
             edit_member = self.members[id_number]
             # Prompt User
-            print("To edit the name of the number please enter 1")
+            print("\nTo edit the name of the member please enter 1")
             print("To edit the member ID please enter 2")
             print("To edit the address of the member please enter 3")
             print("To edit the city of the member please enter 4")
@@ -94,12 +96,12 @@ class manager:
     # Search for member in the dict
     def search_member(self, id):
         # Search for member in dictionary
-        return id in self.members
+        return id in self.members.keys()
     
       # Search for provider in the dict
     def search_provider(self, id):
         # Search for provider in dictionary
-        return id in self.providers
+        return id in self.providers.keys()
 
     # Add a member to dict
     def add_member(self):
@@ -109,7 +111,7 @@ class manager:
         name = input("Please enter in the name of the member\n")
         if (temp.setName(name) is False):
             self.add_member()
-        new_id = input("Please enter in the ID number\n")
+        new_id = int(input("Please enter in the ID number\n"))
         if (temp.setNumber(new_id) is False):
             self.add_member()
         new_add = input("Please enter in the address of the member\n")
@@ -121,7 +123,7 @@ class manager:
         new_state = input("Please enter in the of the new state\n")
         if (temp.setState(new_state) is False):
             self.add_member()
-        new_zip = input("Please enter in the zip code of the member\n")
+        new_zip = int(input("Please enter in the zip code of the member\n"))
         if (temp.setZip(new_zip) is False):
             self.add_member()
         temp.setStatus(1)
@@ -136,6 +138,7 @@ class manager:
         if (self.search_member(id)):
             # Remove member
             self.members.pop(id)
+            print("Member was successfully removed")
             return 1
         else:
             print("\nKey not found\n")
@@ -149,7 +152,7 @@ class manager:
         name = input("Please enter in the name of the provider\n")
         if (temp.setName(name) is False):
             self.add_provider()
-        new_id = input("Please enter in the ID number\n")
+        new_id = int(input("Please enter in the ID number\n"))
         if (temp.setNumber(new_id) is False):
             self.add_provider()
         new_add = input("Please enter in the address of the provider\n")
@@ -161,7 +164,7 @@ class manager:
         new_state = input("Please enter in the name of the provider's state\n")
         if (temp.setState(new_state) is False):
             self.add_provider()
-        new_zip = input("Please enter in the zip code of the provider\n")
+        new_zip = int(input("Please enter in the zip code of the provider\n"))
         if (temp.setZip(new_zip) is False):
             self.add_provider()
         temp.setStatus(1)
@@ -170,10 +173,11 @@ class manager:
 
     #Remove provider
     def remove_provider(self):
-        id = int(input("\nPlease enter the name of the provider you'd like to remove\n"))
+        id = int(input("\nPlease enter the ID of the provider you'd like to remove\n"))
         if(self.search_provider(id)):
             # Remove provider
             self.providers.pop(id)
+            print("\nProvider was successfully removed")
             return 1
         else:
             print("Provider not found\n")
@@ -182,12 +186,12 @@ class manager:
     # Edit member info
     def edit_provider(self):
         # Prompt User
-        id_number = input("Please enter in the ID number of the provider\n")
+        id_number = int(input("Please enter in the ID number of the provider\n"))
         # Search for provider
-        if (self.search_provider(id_number) is True):
+        if ((self.search_provider(id_number)) == True):
             edit_provider = self.providers[id_number]
             # Prompt User
-            print("To edit the name of the number please enter 1")
+            print("\nTo edit the name of the number please enter 1")
             print("To edit the provider ID please enter 2")
             print("To edit the address of the provider please enter 3")
             print("To edit the city of the provider please enter 4")
@@ -217,10 +221,21 @@ class manager:
             elif (temp == 7):
                 status = int(input("Please enter in 1 to activate the provider\n" +
                                    "Please enter 0 to deactivate the provider\n"))
-                edit_provider.set_status(status)
+                if(status == 1):
+                    edit_provider.set_status(True)
+                elif(status == 0):
+                    edit_provider.set_status(False)
             # Display updated info
             print("Updated " + edit_provider.name + " info")
             return 1
         else:
             print("\nError provider not found\n")
             return 0
+        
+    def display_prov(self):
+        for key, provider in self.providers.items():
+            provider.display()
+
+    def display_member(self):
+        for key, member in self.members.items():
+            member.display()

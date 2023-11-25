@@ -33,4 +33,12 @@ class Provider(Member):
         print("Service removed")
         return True
     
-    #Add setter functions here#
+    def display(self):
+        print("\nProvider Information:")
+        print(f"Name: {self.name}")
+        print(f"Number: {self.number}")
+        print(f"Address: {self.address}")
+        print(f"City: {self.city}")
+        print(f"State: {self.state}")
+        print(f"Zip: {self.zipCode}")
+        print(f"Status: {self.status}") 
