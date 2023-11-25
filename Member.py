@@ -87,3 +87,4 @@ class Member():
         if (not isinstance(inStatus, bool)):
             raise TypeError
         self.status = inStatus
+        return
