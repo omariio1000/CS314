@@ -1,10 +1,10 @@
-#Member class
+# Member class
 
 class Member():
-    #constructor, defaults to member not provider
+    # constructor, defaults to member not provider
     def __init__(self, inName: str = None, inNumber: int = None, inAddress: str = None,
                  inCity: str = None, inState: str = None, inZip: int = None, inStatus: bool = None):
-        
+
         self.name = None
         self.number = None
         self.address = None
@@ -20,73 +20,73 @@ class Member():
         ret = (ret and self.setCity(inCity))
         ret = (ret and self.setState(inState))
         ret = (ret and self.setZip(inZip))
-        
+
         if not (ret):
             raise ValueError
-    
-    #Set name
+
+    # Set name
     def setName(self, inName: str) -> bool:
-        if(inName):
+        if (inName):
             if (len(inName) > 25):
                 print("Name must be <= 25 characters!")
                 return False
-        
+
         self.name = inName
         return True
-    
-    #Set member/provider number
+
+    # Set member/provider number
     def setNumber(self, inNumber: int) -> bool:
-        if(inNumber):
+        if (inNumber):
             if (0 > inNumber > 999999999):
                 print("Member number must be maximum 9 digits long!")
                 return False
 
         self.number = inNumber
         return True
-    
-    #Set address
+
+    # Set address
     def setAddr(self, inAddr: str) -> bool:
-        if(inAddr):
+        if (inAddr):
             if (len(inAddr) > 25):
                 print("Address must be <= 25 characters!")
                 return False
-        
+
         self.address = inAddr
         return True
 
-    #Set city
+    # Set city
     def setCity(self, inCity: str) -> bool:
-        if(inCity):
+        if (inCity):
             if (len(inCity) > 14):
                 print("City must be <= 14 characters!")
                 return False
         self.city = inCity
         return True
-    
-    #Set state abbreviation
+
+    # Set state abbreviation
     def setState(self, inState: str) -> bool:
-        if(inState):
+        if (inState):
             if (len(inState) != 2):
                 print("State must be 2 characters long (abbreviation)!")
                 return False
         self.state = inState
         return True
-    
-    #Set zip code
+
+    # Set zip code
     def setZip(self, inZip: int) -> bool:
-        if(inZip):
+        if (inZip):
             if (0 > inZip > 99999):
                 print("Zip code must be 5 digits long!")
                 return False
-        
+
         self.zipCode = inZip
         return True
-    
-    #Set status
-    def setStatus(self, inStatus: bool) -> None:     
+
+    # Set status
+    def setStatus(self, inStatus: bool) -> None:
         self.status = inStatus
 
-    #Display
+    # Display
     def display(self):
         print("\nMember Information:")
         print(f"Name: {self.name}")
