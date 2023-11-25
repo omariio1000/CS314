@@ -7,14 +7,15 @@ class Record():
                  inMem: int = None, inServ: int = None, inBill: float = None, inComments: str = None):
         
         self.currentTime = None
-        self.setTime(inTime)
-
-
         self.providerID = None
         self.memberID = None
         self.serviceCode = None
         self.bill = None
         self.comments = None
+
+        if (inTime == None or inServiceDate == None or inProv == None or inMem == None
+            or inServ == None or inBill == None):
+                return
 
         ret = True
         ret = (ret and self.setDate(inServiceDate))
@@ -25,9 +26,11 @@ class Record():
         
         if (inComments != None):
             ret = (ret and self.setComments(inComments))
-        
+         
         if not (ret):
             raise ValueError
+        
+        self.setTime(inTime)
 
     def setTime(self, inTime: datetime = None) -> None:
         if (inTime == None):
