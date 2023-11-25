@@ -85,3 +85,4 @@ class Member():
     #Set status
     def setStatus(self, inStatus: bool) -> None:     
         self.status = inStatus
+        return

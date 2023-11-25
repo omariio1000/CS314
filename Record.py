@@ -7,6 +7,7 @@ class Record():
                  inMem: int = None, inServ: int = None, inBill: float = None, inComments: str = None):
         
         self.currentTime = None
+        self.serviceDate = None
         self.providerID = None
         self.memberID = None
         self.serviceCode = None
