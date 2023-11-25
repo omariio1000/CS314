@@ -74,17 +74,17 @@ def test_setters_name_incorrect_value():
     test = Service()
     assert test.setName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == False
 
-#def test_setters_code_incorrect_value():
-#    test = Service()
-#   assert test.setCode(1000000000) == False
+def test_setters_code_incorrect_value():
+    test = Service()
+    assert test.setCode(1000000000) == False
 
 def test_setters_desc_incorrect_value():
     test = Service()
     assert test.setDesc("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == False
 
 
-#def test_setters_cost_incorrect_value():
-#    test = Service()
-#    assert test.setCost(2999.9) == False
+def test_setters_cost_incorrect_value():
+    test = Service()
+    assert test.setCost(2999.9) == False
 
 

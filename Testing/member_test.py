@@ -98,10 +98,10 @@ def test_setters_zip_code_incorrect():
     with pytest.raises(TypeError):
         test.setZip("29")
 
-#def test_setters_status_incorrect():
-#    test = Member()
-#    with pytest.raises(ValueError):
-#        test.setStatus(5)
+def test_setters_status_incorrect():
+   test = Member()
+   with pytest.raises(TypeError):
+       test.setStatus(5)
 
 
 
@@ -110,9 +110,9 @@ def test_setters_name_incorrect_value():
     test = Member()
     assert test.setName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == False
 
-#def test_setters_number_incorrect_value():
-#    test = Member()
-#   assert test.setNumber(1000000000) == False
+def test_setters_number_incorrect_value():
+    test = Member()
+    assert test.setNumber(1000000000) == False
 
 def test_setters_address_incorrect_value():
     test = Member()
@@ -126,12 +126,12 @@ def test_setters_state_incorrect_value():
     test = Member()
     assert test.setState("AAA") == False
 
-#def test_setters_zip_code_incorrect_value():
-#    test = Member()
-#    assert test.setStatus(1000000000) == False
+def test_setters_zip_code_incorrect_value():
+   test = Member()
+   assert test.setZip(1000000000) == False
 
-#def test_setters_status_incorrect_value():
-#    test = Member()
-#    with pytest.raises(TypeError):
-#        test.setStatus("29")
+def test_setters_status_incorrect_value():
+    test = Member()
+    with pytest.raises(TypeError):
+        test.setStatus("29")
 

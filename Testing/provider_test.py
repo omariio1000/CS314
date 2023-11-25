@@ -31,10 +31,10 @@ def test_removeService_positive():
     assert test.removeService(5) == True
     assert test.services.__contains__(5) == False
 
-#def test_removeService_incorrect():
-#    test = Provider()
-#    with pytest.raises(TypeError):
-#        test.removeService("29") 
+def test_removeService_incorrect():
+    test = Provider()
+    with pytest.raises(TypeError):
+        test.removeService("29") 
 
 def test_removeService_incorrect_not_in_list():
     test = Provider()

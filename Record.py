@@ -49,7 +49,7 @@ class Record():
         return True
     
     def setProv(self, inProv: int) -> bool:
-        if (0 > inProv > 999999999):
+        if (0 > inProv or inProv > 999999999):
             print("Provider ID must be 9 digits long!")
             return False
         
@@ -57,7 +57,7 @@ class Record():
         return True
     
     def setMem(self, inMem: int) -> bool:
-        if (0 >inMem > 999999999):
+        if (0 > inMem or inMem > 999999999):
             print("Member ID must be 9 digits long!")
             return False
         
@@ -65,7 +65,7 @@ class Record():
         return True
 
     def setCode(self, inCode: int) -> bool:
-        if (0 > inCode > 999999999):
+        if (0 > inCode or inCode > 999999999):
             print("Service code must be 9 digits long!")
             return False
         
@@ -73,7 +73,7 @@ class Record():
         return True
     
     def setBill(self, inBill: float) -> bool:
-        if (inBill > 999.99):
+        if (0 > inBill or inBill > 999.99):
             print("Can't charge them that much!")
             return False
         elif (inBill < 0):
