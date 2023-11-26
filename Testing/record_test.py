@@ -15,9 +15,9 @@ def test_contructor_empty():
 
 def test_contructor_vals():
     dateString = '09-19-2022'
-    dateTest = datetime.strptime(dateString, '%m-%d-%Y').date()
+    dateTest = datetime.strptime(dateString, '%m-%d-%Y')
     timeString = '13::55::26'
-    timeTest = datetime.strptime(timeString, '%H::%M::%S').time()
+    timeTest = datetime.strptime(timeString, '%H::%M::%S')
 
 
     test = Record(timeTest, dateTest, 29, 2929, 292929, 2.9, "a comment")
@@ -31,17 +31,17 @@ def test_contructor_vals():
 
 def test_wrong_type():
     dateString = '09-19-2022'
-    dateTest = datetime.strptime(dateString, '%m-%d-%Y').date()
+    dateTest = datetime.strptime(dateString, '%m-%d-%Y')
     timeString = '13::55::26'
-    timeTest = datetime.strptime(timeString, '%H::%M::%S').time()
+    timeTest = datetime.strptime(timeString, '%H::%M::%S')
     with pytest.raises(TypeError):
         Record(timeTest, dateTest, "29", 2929, 292929, 2.9, "a comment")
 
 def test_wrong_value():
     dateString = '09-19-2022'
-    dateTest = datetime.strptime(dateString, '%m-%d-%Y').date()
+    dateTest = datetime.strptime(dateString, '%m-%d-%Y')
     timeString = '13::55::26'
-    timeTest = datetime.strptime(timeString, '%H::%M::%S').time()
+    timeTest = datetime.strptime(timeString, '%H::%M::%S')
     with pytest.raises(ValueError):
         Record(timeTest, dateTest, 29, 2929, 292929, 2999.9, "a comment")
 
@@ -49,14 +49,14 @@ def test_wrong_value():
 def test_setters_time():
     test = Record()
     timeString = '13::55::26'
-    timeTest = datetime.strptime(timeString, '%H::%M::%S').time()
+    timeTest = datetime.strptime(timeString, '%H::%M::%S')
     test.setTime(timeTest)
     assert test.currentTime == timeTest
 
 def test_setters_date():
     test = Record()
     dateString = '09-19-2022'
-    dateTest = datetime.strptime(dateString, '%m-%d-%Y').date()
+    dateTest = datetime.strptime(dateString, '%m-%d-%Y')
     assert test.setDate(dateTest) == True
     assert test.serviceDate == dateTest
 
@@ -87,12 +87,12 @@ def test_setters_comments():
 
 
 
-def test_setters_time_incorrect():
+def test_setters_time_incorrect(): #ERROR
     test = Record()
     with pytest.raises(TypeError):
         test.setTime(29)
 
-def test_setters_date_incorrect():
+def test_setters_date_incorrect(): #ERROR
     test = Record()
     with pytest.raises(TypeError):
         test.setDate("29")
@@ -117,9 +117,9 @@ def test_setters_bill_incorrect():
     with pytest.raises(TypeError):
         test.setBill("29")
 
-def test_setters_comments_incorrect():
+def test_setters_comments_incorrect(): #ERROR
     test = Record()
-    with pytest.raises(ValueError):
+    with pytest.raises(TypeError):
         test.setComments(29)
 
 

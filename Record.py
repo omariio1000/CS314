@@ -37,6 +37,8 @@ class Record():
         if (inTime == None):
             self.currentTime = datetime.datetime.now()
             return
+        elif not isinstance(inTime, datetime):
+                  raise TypeError
         
         self.currentTime = inTime
         return
@@ -45,6 +47,8 @@ class Record():
         if (inDate == None):
             print("Invalid date!")
             return False
+        elif not isinstance(inDate, datetime):
+                  raise TypeError
         
         self.serviceDate = inDate
         return True
@@ -85,7 +89,7 @@ class Record():
         return True
 
     def setComments(self, inComments: str) -> bool:
-        if (len(str(inComments)) > 100):
+        if (len(inComments) > 100):
             print("Max length of comments is 100!")
             return False
         
