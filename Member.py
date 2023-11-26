@@ -79,13 +79,3 @@ class Member():
     # Set status
     def setStatus(self, inStatus: bool) -> None:
         self.status = inStatus
-
-    # # Display
-    # def display(self):
-    #     print("\nMember Information:")
-    #     print(f"Name: {self.name}")
-    #     print(f"Number: {self.number}")
-    #     print(f"Address: {self.address}")
-    #     print(f"City: {self.city}")
-    #     print(f"State: {self.state}")
-    #     print(f"Zip Code: {self.zipCode}")
