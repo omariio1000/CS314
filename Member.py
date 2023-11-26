@@ -13,6 +13,10 @@ class Member():
         self.zipCode = None
         self.status = inStatus
 
+        if (inName == None or inNumber == None or inAddress == None or inCity == None
+            or inState == None or inZip == None or inStatus == None):
+                return
+
         ret = True
         ret = (ret and self.setName(inName))
         ret = (ret and self.setNumber(inNumber))
@@ -75,7 +79,8 @@ class Member():
 
         self.zipCode = inZip
         return True
-
-    # Set status
-    def setStatus(self, inStatus: bool) -> None:
+    
+    #Set status
+    def setStatus(self, inStatus: bool) -> None:     
         self.status = inStatus
+        return

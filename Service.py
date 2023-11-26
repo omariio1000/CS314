@@ -7,6 +7,9 @@ class Service():
         self.desc = None
         self.cost = None
 
+        if (inCode == None or inName == None or inDesc == None or inCost == None):
+            return
+
         ret = True
         ret = (ret and self.setCode(inCode))
         ret = (ret and self.setName(inName))
