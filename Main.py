@@ -288,37 +288,24 @@ def main():
 
     '''
     TO-DO LIST:
-        FILE HANDLING STUFF FIRST - DONE
-            CHECK SERVICE DIRECTORY FOR SERVICES - DONE
-            CHECK PROVIDER DIRECTORY FOR PROVIDERS - DONE
-            CHECK MEMBER DIRECTORY FOR MEMBER - DONE
-            CHECK RECORD DIRECTORY FOR RECORDS - DONE
+        File reading stuff - DONE
+        Manager mode - DONE
+        Provider mode - DONE
+        Unit testing - DONE
 
-        MANAGER MODE - NAJIIB
-            ADDING/MODIFYING MEMBERS
-            ADDING/MODIFYING PROVIDERS
-            ADDING/MODIFYING SERVICES
-            ADDING/MODIFYING RECORDS
-            GENERATE REPORTS
-        
-        PROVIDER MODE - ABDIRIZAK
-            VERIFY MEMBER ID
-            CREATE RECORDS
-            GENERATE REPORTS
+        Other file handling stuff - Layaal
+            Writing services to directory
+            Writing members to directory
+            Writing providers to directory
+            Writing records to directory
+            Records/EFT stuff to directories:
+                Provider summary report
+                Member summary report
+                Provider EFT
+                Member EFT
 
-        OTHER FILE HANDLING STUFF - LAYAAL
-            WRITING SERVICES TO DIRECTORY
-            WRITING MEMBERS TO DIRECTORY
-            WRITING PROVIDERS TO DIRECTORY
-            WRITING RECORDS TO DIRECTORY
-
-        VERY LOW PRIORITY - OMAR
-            MANAGER AND PROVIDER ENCRYPTED ACCESS CODES (LIBRARY FOR THIS OR BASIC CIPHER)
-            BETTER UI
-            DIFFERENT FILE HANDLING (.JSON, DATABSE, ETC) - really not tryna do this
-
-        TESTING - ADAM + ABDIRIZAK
-
+        Other - Omar
+            Manager and provider access codes 
     '''
 
     print("Welcome to ChocAn!")
