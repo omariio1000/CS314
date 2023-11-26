@@ -39,7 +39,7 @@ class Member():
 
     # Set member/provider number
     def setNumber(self, inNumber: int) -> bool:
-        if (0 > inNumber > 999999999):
+        if (0 > inNumber or inNumber > 999999999):
             print("Member number must be maximum 9 digits long!")
             return False
 
@@ -73,7 +73,7 @@ class Member():
 
     # Set zip code
     def setZip(self, inZip: int) -> bool:
-        if (0 > inZip > 99999):
+        if (0 > inZip or inZip > 99999):
             print("Zip code must be 5 digits long!")
             return False
 
@@ -81,6 +81,8 @@ class Member():
         return True
     
     #Set status
-    def setStatus(self, inStatus: bool) -> None:     
+    def setStatus(self, inStatus: bool) -> None:  
+        if (not isinstance(inStatus, bool)):
+            raise TypeError
         self.status = inStatus
         return

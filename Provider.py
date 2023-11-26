@@ -25,6 +25,9 @@ class Provider(Member):
         return True
 
     def removeService(self, inCode: int) -> bool:
+        if (not isinstance(inCode, int)):
+            raise TypeError
+        
         try:
             self.services.remove(inCode)
         except ValueError as ve:

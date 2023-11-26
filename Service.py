@@ -20,7 +20,7 @@ class Service():
             raise ValueError
 
     def setCode(self, inCode: int) -> bool:
-        if (0 > inCode > 999999999):
+        if (0 > inCode or inCode > 999999999):
             print("Service code must be 9 digits long!")
             return False
         
@@ -44,7 +44,7 @@ class Service():
         return True
     
     def setCost(self, inCost: float) -> bool:
-        if (0 > inCost > 999.99):
+        if (0 > inCost or inCost > 999.99):
             print("Can't cost that much!")
             return False
         
