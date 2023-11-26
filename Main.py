@@ -2,7 +2,9 @@ from Member import Member
 from Provider import Provider
 from Service import Service
 from Record import Record
+from Manager import manager
 from datetime import datetime
+from Manager import manager
 import os
 
 records = []
@@ -10,9 +12,6 @@ services = dict()
 members = dict()
 providers = dict()
 
-def managerMode():
-    print("\nWelcome to manager mode.")
-    return
 
 def providerMode():
     print("\nWelcome to provider mode.")
@@ -21,37 +20,39 @@ def providerMode():
     print("\n3. Create a Record")
 
     choice = int(input("\nSelect your decision: "))
-    
-    if(choice == 1) :
+
+    if (choice == 1):
         verifyID()
 
-    if(choice == 2) :
+    if (choice == 2):
         provID = int(input("\nWhat is your provider ID: "))
         printRecords(provID)
-    
-    if(choice == 3) : 
+
+    if (choice == 3):
         createRecords()
 
-    else :
+    else:
         print("\nPlease enter 1, 2, or 3!")
 
     return
 
-def verifyID() :
+
+def verifyID():
     ID = int(input("\nEnter the ID of the member: "))
-    
+
     if members.get(ID) is not None:
-        if(members[ID].status == True) :
+        if (members[ID].status == True):
             print("\nSuspended")
-        else :
+        else:
             print("\nValidated")
-    else :
+    else:
         print("\nInvalid ID number")
 
-def printRecords(provID) :
-    
-    for key in records :
-        if key.providerID == provID :
+
+def printRecords(provID):
+
+    for key in records:
+        if key.providerID == provID:
             print("-" * 100)
             print(f"Current: {key.currentTime},")
             print(f"Service Date: {key.serviceDate},")
@@ -61,26 +62,29 @@ def printRecords(provID) :
             print(f"Bill: {key.bill},")
             print(f"Comments: {key.comments}")
             print("-" * 100)
-        else :
+        else:
             print("\nNo records found for the given provider ID.")
-        
-def createRecords() :
-   
-   # Layaal please make this write to a file, if you need help just let me know on discord - Abdirizak 
-    
-    print("You're creating a record, please follow instructions below") 
+
+
+def createRecords():
+
+   # Layaal please make this write to a file, if you need help just let me know on discord - Abdirizak
+
+    print("You're creating a record, please follow instructions below")
 
     try:
-        time_input = input("Enter Current Time (YYYY/MM/DD/HH/MM/SS) or 'now' for current time: ")
+        time_input = input(
+            "Enter Current Time (YYYY/MM/DD/HH/MM/SS) or 'now' for current time: ")
 
         if time_input.lower() == 'now':
-           currentTime = datetime.now()
+            currentTime = datetime.now()
         else:
-           try:
-               currentTime = datetime.strptime(time_input, "%Y/%m/%d/%H/%M/%S")
-           except ValueError:
-               print("Incorrect time format. Record will not be created.")
-               return
+            try:
+                currentTime = datetime.strptime(
+                    time_input, "%Y/%m/%d/%H/%M/%S")
+            except ValueError:
+                print("Incorrect time format. Record will not be created.")
+                return
 
         serviceDate = str(input("Enter Service Date (YYYY/MM/DD): "))
 
@@ -92,21 +96,22 @@ def createRecords() :
 
         bill = float(input("Enter bill: "))
 
-        comments = str(input("Enter any comments please: " ))
-           
-        newRecord = Record(currentTime, serviceDate, providerId, memberId, serviceCode, bill, comments)
+        comments = str(input("Enter any comments please: "))
+
+        newRecord = Record(currentTime, serviceDate, providerId,
+                           memberId, serviceCode, bill, comments)
         records.append(newRecord)
 
-    except ValueError: 
+    except ValueError:
         print("An error has occured Record will not be created.")
 
 
 def addFiles():
-    scriptDir = os.path.dirname(__file__) #absolute dir
-    recordDir =  scriptDir + "/Records/"
-    serviceDir =  scriptDir + "/Services/"
-    memberDir =  scriptDir + "/Members/"
-    providerDir =  scriptDir + "/Providers/"
+    scriptDir = os.path.dirname(__file__)  # absolute dir
+    recordDir = scriptDir + "/Records/"
+    serviceDir = scriptDir + "/Services/"
+    memberDir = scriptDir + "/Members/"
+    providerDir = scriptDir + "/Providers/"
 
     extRecords = os.listdir(recordDir)
     extServices = os.listdir(serviceDir)
@@ -117,14 +122,14 @@ def addFiles():
         # print(recordDir + extRecord)
         file = open(recordDir + extRecord, "r")
         fileData = file.readlines()
-        
-        #removing \n characters from strings
+
+        # removing \n characters from strings
         count = 0
         for data in fileData:
             if (data[-1] == '\n'):
                 fileData[count] = data[:-1]
             count += 1
-        
+
         currentTime = datetime.strptime(extRecord[:-4], '%Y_%m_%d_%H_%M_%S')
         # print(currentTime)
 
@@ -133,10 +138,10 @@ def addFiles():
 
         providerId = int(fileData[1])
         # print("{:06d}".format(providerId))
-        
+
         memberId = int(fileData[2])
         # print("{:06d}".format(memberId))
-        
+
         serviceCode = int(fileData[3])
         # print("{:06d}".format(serviceCode))
 
@@ -150,16 +155,16 @@ def addFiles():
         else:
             comments = None
 
-        newRecord = Record(currentTime, serviceDate, providerId, memberId, serviceCode, bill, comments)
+        newRecord = Record(currentTime, serviceDate, providerId,
+                           memberId, serviceCode, bill, comments)
         records.append(newRecord)
-
 
     for extService in extServices:
         # print(serviceDir + extService)
         file = open(serviceDir + extService, "r")
         fileData = file.readlines()
-        
-        #removing \n characters from strings
+
+        # removing \n characters from strings
         count = 0
         for data in fileData:
             if (data[-1] == '\n'):
@@ -180,15 +185,15 @@ def addFiles():
 
         newService = Service(code, name, desc, cost)
         services[code] = newService
-    
+
     # print(services)
 
     for extMember in extMembers:
         # print(memberDir + extMember)
         file = open(memberDir + extMember, "r")
         fileData = file.readlines()
-        
-        #removing \n characters from strings
+
+        # removing \n characters from strings
         count = 0
         for data in fileData:
             if (data[-1] == '\n'):
@@ -219,7 +224,7 @@ def addFiles():
         status = True
         if (statusInt == 0):
             status = False
-        #print(status)
+        # print(status)
 
         newMember = Member(name, number, address, city, state, zip, status)
         members[number] = newMember
@@ -230,8 +235,8 @@ def addFiles():
         # print(providerDir + extProvider)
         file = open(providerDir + extProvider, "r")
         fileData = file.readlines()
-        
-        #removing \n characters from strings
+
+        # removing \n characters from strings
         count = 0
         for data in fileData:
             if (data[-1] == '\n'):
@@ -262,7 +267,7 @@ def addFiles():
         status = True
         if (statusInt == 0):
             status = False
-        #print(status)
+        # print(status)
 
         newProvider = Provider(name, number, address, city, state, zip, status)
 
@@ -277,8 +282,8 @@ def addFiles():
 
     return
 
-def main():
 
+def main():
     addFiles()
 
     '''
@@ -314,21 +319,22 @@ def main():
 
         TESTING - ADAM + ABDIRIZAK
 
-    '''    
+    '''
 
     print("Welcome to ChocAn!")
     running = True
-
-    while(running):
+    while (running):
+       # print(members[1].number)
+        manager_mode = manager(providers, members, records)
         print("\nOptions:")
         print("1: Manager Mode")
         print("2: Provider Mode")
         print("3: Quit")
 
         choice = int(input("Select your mode: "))
-        
+
         if (choice == 1):
-            managerMode()
+            manager_mode.welcome()
 
         elif (choice == 2):
             providerMode()
@@ -341,6 +347,7 @@ def main():
             print("Invalid option selected.\n")
 
     return
+
 
 if __name__ == "__main__":
     main()
