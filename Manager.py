@@ -14,36 +14,40 @@ class manager:
     def welcome(self):
         # Variables
         choice = 0
-        # Prompt User
-        print("Welcome to Manager Mode\n")
-        print("To edit information about members please enter 1")
-        print("To edit information about providers please enter 2")
-        print("To add a member please enter 3")
-        print("To add a provider please enter 4")
-        print("To remove a member please enter 5")
-        print("To remove a provider please enter 6")
-        print("To generate reports please enter 7")
-        choice = int(input())
-        # Error Check
-        if choice not in [1, 2, 3, 4, 5, 6, 7, 8]:
-            print(f"Invalid input: {choice}")
-            return 0
-        elif (choice == 1):
-            self.edit_member()
-        elif (choice == 2):
-            self.edit_provider()
-        elif (choice == 3):
-            self.add_member()
-        elif (choice == 4):
-            self.add_provider()
-        elif (choice == 5):
-            self.remove_member()
-        elif (choice == 6):
-            self.remove_provider()
-        elif (choice == 7):
-            self.display_prov()
-        elif (choice == 8):
-            self.display_member()
+        while(True):
+            # Prompt User
+            print("Welcome to Manager Mode\n")
+            print("To edit information about members please enter 1")
+            print("To edit information about providers please enter 2")
+            print("To add a member please enter 3")
+            print("To add a provider please enter 4")
+            print("To remove a member please enter 5")
+            print("To remove a provider please enter 6")
+            print("To generate reports please enter 7")
+            print("To exit manager mode please enter 0")
+            choice = int(input())
+            # Error Check
+            if choice not in [0, 1, 2, 3, 4, 5, 6, 7]:
+                print(f"Invalid input: {choice}")
+                return 0
+            elif(choice == 0):
+                break
+            elif (choice == 1):
+                self.edit_member()
+            elif (choice == 2):
+                self.edit_provider()
+            elif (choice == 3):
+                self.add_member()
+            elif (choice == 4):
+                self.add_provider()
+            elif (choice == 5):
+                self.remove_member()
+            elif (choice == 6):
+                self.remove_provider()
+            # elif (choice == 7):
+            #     #self.display_prov()
+            # elif (choice == 8):
+            #     #self.display_member()
         return 1
 
     # Edit member info
