@@ -1,7 +1,7 @@
 # Provider class
 
 from Member import Member
-
+import os
 
 class Provider(Member):
     # constructor, defaults to member not provider
@@ -11,6 +11,8 @@ class Provider(Member):
         Member.__init__(self, inName, inNumber, inAddress,
                         inCity, inState, inZip, inStatus)
         self.services = []
+    
+
 
     def addService(self, inService: int) -> bool:
         if (inService < 0):
@@ -22,6 +24,7 @@ class Provider(Member):
             return False
 
         self.services.append(inService)
+        self.writeServiceToFile(inService)
         return True
 
     def removeService(self, inCode: int) -> bool:

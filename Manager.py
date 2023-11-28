@@ -1,6 +1,6 @@
 from Member import Member
 from Provider import Provider
-
+import os
 # Manager Class
 
 
@@ -108,6 +108,26 @@ class manager:
     def search_provider(self, id):
         # Search for provider in dictionary
         return id in self.providers.keys()
+    
+    def writeMemberToFile(self, member):
+        scriptDir = os.path.dirname(__file__)
+        memberDir = scriptDir + "/Members/"
+
+        # Create a filename based on the member number
+        filename = f"{member.number}.txt"
+        filepath = os.path.join(memberDir, filename)
+
+        # Open the file for writing
+        with open(filepath, "w") as file:
+            # Write member data to the file
+            file.write(f"{member.name}\n")
+            file.write(f"{member.number}\n")
+            file.write(f"{member.address}\n")
+            file.write(f"{member.city}\n")
+            file.write(f"{member.state}\n")
+            file.write(f"{member.zipCode}\n")
+            file.write(f"{int(member.status)}\n")
+
 
     # Add a member to dict
     def add_member(self):
@@ -135,6 +155,7 @@ class manager:
         temp.setStatus(True)
         # Add to member dict
         self.members[temp.number] = temp
+        self.writeMemberToFile(temp)
         return temp.number
 
     # Remove a member from dict
@@ -148,7 +169,29 @@ class manager:
             return 1
         else:
             print("\nKey not found\n")
-            return 0
+        return 0
+    
+    def writeProvidersToFile(self):
+        scriptDir = os.path.dirname(__file__)
+        providerDir = scriptDir + "/Providers/"
+
+        for number, provider in self.providers.items():
+            # Create a filename based on the provider number
+            filename = f"{number}.txt"
+            filepath = os.path.join(providerDir, filename)
+
+            # Open the file for writing
+            with open(filepath, "w") as file:
+                # Write provider data to the file
+                file.write(f"{provider.name}\n")
+                file.write(f"{provider.number}\n")
+                file.write(f"{provider.address}\n")
+                file.write(f"{provider.city}\n")
+                file.write(f"{provider.state}\n")
+                file.write(f"{provider.zip}\n")
+                file.write(f"{int(provider.status)}\n")
+                if hasattr(provider, 'services'):
+                    file.write(",".join(str(service) for service in provider.services) + "\n")
 
     # Add provider to dict
     def add_provider(self):
@@ -176,6 +219,7 @@ class manager:
         temp.setStatus(1)
         # Add to provider dict
         self.providers[temp.number] = temp
+        self.writeProvidersToFile()
 
     # Remove provider
     def remove_provider(self):

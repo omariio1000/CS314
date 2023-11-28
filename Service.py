@@ -1,5 +1,5 @@
 #Service class
-
+import os
 class Service():
     def __init__(self, inCode: int = None, inName: str = None, inDesc: str = None, inCost: float = None):
         self.code = None
@@ -50,3 +50,20 @@ class Service():
         
         self.cost = inCost
         return True
+    
+    def writeServiceToFile(self, serviceCode:int):
+        scriptDir = os.path.dirname(__file__)
+        serviceDir = scriptDir + "/Services/"
+
+        # Create a filename based on the service code
+        filename = f"{serviceCode}.txt"
+        filepath = os.path.join(serviceDir, filename)
+
+        # Open the file for writing
+        with open(filepath, "w") as file:
+            # Write service data to the file
+            file.write(f"{serviceCode}\n")
+            file.write(f"{self.code}\n") 
+            file.write(f"{self.name}\n")
+            file.write(f"{self.desc}\n")
+            file.write(f"{self.cost}\n")

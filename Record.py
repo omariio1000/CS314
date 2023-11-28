@@ -1,7 +1,7 @@
 #Record class (to write to disk)
 
 from datetime import datetime
-
+import os
 class Record():
     def __init__(self, inTime: datetime = None, inServiceDate: datetime = None, inProv: int = None, 
                  inMem: int = None, inServ: int = None, inBill: float = None, inComments: str = None):
@@ -95,3 +95,4 @@ class Record():
         
         self.comments = inComments
         return True
+    
