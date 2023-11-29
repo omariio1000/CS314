@@ -380,7 +380,7 @@ class manager:
         
 
     
-    def generate_member_summary_reports(self, current_date):
+    def generate_member_summary_report(self, current_date):
         for member_id, member in self.members.items():
             member_records = self.get_member_records(member_id, current_date)
 
