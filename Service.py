@@ -1,5 +1,5 @@
 #Service class
-
+import os
 class Service():
     def __init__(self, inCode: int = None, inName: str = None, inDesc: str = None, inCost: float = None):
         self.code = None
@@ -50,3 +50,5 @@ class Service():
         
         self.cost = inCost
         return True
+    
+    

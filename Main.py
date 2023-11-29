@@ -65,13 +65,28 @@ def printRecords(provID):
         else:
             print("\nNo records found for the given provider ID.")
 
+def writeRecordToFile(record):
+        scriptDir = os.path.dirname(__file__)
+        recordDir = scriptDir + "/Records/"
 
+        # Create a filename based on the timestamp
+        filename = f"{record.currentTime.strftime('%Y_%m_%d_%H_%M_%S')}.txt"
+        filepath = os.path.join(recordDir, filename)
+
+        # Open the file for writing
+        with open(filepath, "w") as file:
+            # Write record data to the file
+            file.write(f"{record.serviceDate.strftime('%Y_%m_%d')}\n")
+            file.write(f"{record.providerID}\n")
+            file.write(f"{record.memberID}\n")
+            file.write(f"{record.serviceCode}\n")
+            file.write(f"{record.bill}\n")
+            file.write(f"{record.comments}\n")
+    
 def createRecords():
 
    # Layaal please make this write to a file, if you need help just let me know on discord - Abdirizak
-
     print("You're creating a record, please follow instructions below")
-
     try:
         time_input = input(
             "Enter Current Time (YYYY/MM/DD/HH/MM/SS) or 'now' for current time: ")
@@ -87,21 +102,15 @@ def createRecords():
                 return
 
         serviceDate = str(input("Enter Service Date (YYYY/MM/DD): "))
-
         providerId = int(input("Enter Provider ID: "))
-
         memberId = int(input("Enter Member ID: "))
-
         serviceCode = int(input("Enter Service Code: "))
-
         bill = float(input("Enter bill: "))
-
         comments = str(input("Enter any comments please: "))
-
         newRecord = Record(currentTime, serviceDate, providerId,
                            memberId, serviceCode, bill, comments)
         records.append(newRecord)
-
+        writeRecordToFile(newRecord)
     except ValueError:
         print("An error has occured Record will not be created.")
 
@@ -132,22 +141,16 @@ def addFiles():
 
         currentTime = datetime.strptime(extRecord[:-4], '%Y_%m_%d_%H_%M_%S')
         # print(currentTime)
-
         serviceDate = datetime.strptime(fileData[0], '%Y_%m_%d')
         # print(serviceDate)
-
         providerId = int(fileData[1])
         # print("{:06d}".format(providerId))
-
         memberId = int(fileData[2])
         # print("{:06d}".format(memberId))
-
         serviceCode = int(fileData[3])
         # print("{:06d}".format(serviceCode))
-
         bill = float(fileData[4])
         # print("{:.2f}".format(bill))
-
         comments = ""
         if (fileData[4] != fileData[-1]):
             comments = fileData[5]
@@ -173,16 +176,12 @@ def addFiles():
 
         code = int(fileData[0])
         # print("{:06d}".format(code))
-
         name = fileData[1]
         # print(name)
-
         desc = fileData[2]
         # print(desc)
-
         cost = float(fileData[3])
         # print("{:.2f}".format(cost))
-
         newService = Service(code, name, desc, cost)
         services[code] = newService
 
@@ -202,25 +201,18 @@ def addFiles():
 
         name = fileData[0]
         # print(name)
-
         number = int(fileData[1])
         # print("{:06d}".format(number))
-
         address = fileData[2]
         # print(address)
-
         city = fileData[3]
         # print(city)
-
         state = fileData[4]
         # print(state)
-
         zip = int(fileData[5])
         # print(zip)
-
         statusInt = int(fileData[6])
         # print(statusInt)
-
         status = True
         if (statusInt == 0):
             status = False
@@ -245,41 +237,29 @@ def addFiles():
 
         name = fileData[0]
         # print(name)
-
         number = int(fileData[1])
         # print("{:06d}".format(number))
-
         address = fileData[2]
         # print(address)
-
         city = fileData[3]
         # print(city)
-
         state = fileData[4]
         # print(state)
-
         zip = int(fileData[5])
         # print(zip)
-
         statusInt = int(fileData[6])
         # print(statusInt)
-
         status = True
         if (statusInt == 0):
             status = False
         # print(status)
-
         newProvider = Provider(name, number, address, city, state, zip, status)
-
         serviceList = fileData[7].split(",")
         for service in serviceList:
             # print("{:06d}".format(int(service)))
             newProvider.addService(int(service))
-
         providers[number] = newProvider
-
     # print(providers)
-
     return
 
 
