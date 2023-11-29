@@ -114,7 +114,7 @@ class manager:
         memberDir = scriptDir + "/Members/"
 
         # Create a filename based on the member number
-        filename = f"{member.number}.txt"
+        filename = f"{member.number}.mem"
         filepath = os.path.join(memberDir, filename)
 
         # Open the file for writing
@@ -177,7 +177,7 @@ class manager:
 
         for number, provider in self.providers.items():
             # Create a filename based on the provider number
-            filename = f"{number}.txt"
+            filename = f"{number}.prov"
             filepath = os.path.join(providerDir, filename)
 
             # Open the file for writing
@@ -188,10 +188,11 @@ class manager:
                 file.write(f"{provider.address}\n")
                 file.write(f"{provider.city}\n")
                 file.write(f"{provider.state}\n")
-                file.write(f"{provider.zip}\n")
+                file.write(f"{provider.zipCode}\n")
                 file.write(f"{int(provider.status)}\n")
                 if hasattr(provider, 'services'):
                     file.write(",".join(str(service) for service in provider.services) + "\n")
+        
 
     # Add provider to dict
     def add_provider(self):
@@ -216,7 +217,7 @@ class manager:
         new_zip = int(input("Please enter in the zip code of the provider\n"))
         if (temp.setZip(new_zip) is False):
             self.add_provider()
-        temp.setStatus(1)
+        temp.setStatus(True)
         # Add to provider dict
         self.providers[temp.number] = temp
         self.writeProvidersToFile()
