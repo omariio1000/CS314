@@ -2,7 +2,7 @@ from Member import Member
 from Provider import Provider
 from Service import Service
 from Record import Record
-from datetime import datetime
+from datetime import datetime, timedelta
 from Encryption import *
 import os
 
@@ -351,7 +351,17 @@ def managerMode(userName: str):
         elif (choice == 6):
             removeMember(True)
         
+        elif (choice == 7):
+            addService()
 
+        elif (choice == 8):
+            editService()
+
+        elif (choice == 9):
+            removeService()
+
+        elif (choice == 10):
+            generateReports()
         
         elif (choice == 13):
             running = False
@@ -451,14 +461,16 @@ def writeProviderToFile(provider: Provider, oldId: int = -1):#TESTED
 def editMember(providerMode: bool = False):#TESTED
     editing = None
     ID = 0
-    
-    if (providerMode):
-        ID = int(input("\nEnter the ID of the provider: "))
-        editing = providers.get(ID)
-    else:
-        ID = int(input("\nEnter the ID of the member: "))
-        editing = members.get(ID)
 
+    try:
+        if (providerMode):
+            ID = int(input("\nEnter the ID of the provider: "))
+            editing = providers.get(ID)
+        else:
+            ID = int(input("\nEnter the ID of the member: "))
+            editing = members.get(ID)
+    except Exception as e:
+        print(f"Unable to edit due to error ({e})")
 
     if editing is not None:
         editing.display()
@@ -492,6 +504,14 @@ def editMember(providerMode: bool = False):#TESTED
 
             elif (choice == 2):
                 newID = int(input("Please enter in the new ID number: "))
+
+                if (providerMode and providers.get(newID is not None)):
+                    print("\nAnother provider has this ID!")
+                    raise ValueError
+                elif (members.get(newID) is not None):
+                    print("\nAnother member has this ID!")
+                    raise ValueError
+
                 editing.setNumber(newID)
 
             elif (choice == 3):
@@ -550,7 +570,7 @@ def editMember(providerMode: bool = False):#TESTED
                 writeMemberToFile(editing, ID)
 
         except Exception as e:
-            print(f"Unable to edit due to ({e}) error")
+            print(f"Unable to edit due to error ({e})")
     else:
         print("\nInvalid ID number")
     
@@ -624,7 +644,7 @@ def addMember(providerMode: bool = False):#TESTED
                     print("Member with this ID already exists!")
 
         except Exception as e:
-            print(f"Unable to add due to ({e}) error")
+            print(f"Unable to add due to error ({e})")
 
     return
 
@@ -632,13 +652,14 @@ def removeMember(providerMode: bool = False):#TESTED
     removing = None
     ID = 0
     
-    if (providerMode):
-        ID = int(input("\nEnter the ID of the provider: "))
-        removing = providers.get(ID)
-    else:
-        ID = int(input("\nEnter the ID of the member: "))
-        removing = members.get(ID)
     try:
+        if (providerMode):
+            ID = int(input("\nEnter the ID of the provider: "))
+            removing = providers.get(ID)
+        else:
+            ID = int(input("\nEnter the ID of the member: "))
+            removing = members.get(ID)
+
         if removing is not None:
             removing.display()
 
@@ -656,7 +677,7 @@ def removeMember(providerMode: bool = False):#TESTED
             else:
                 print("\nInvalid Input. Not removed.")
     except Exception as e:
-            print(f"Unable to remove due to ({e}) error")
+            print(f"Unable to remove due to error ({e})")
 
     return
 
@@ -693,36 +714,231 @@ def writeServiceFile(service: Service, oldId: int = -1):
         file.write(f"{service.code:09d}\n")
         file.write(f"{service.name}\n")
         file.write(f"{service.desc}\n")
-        file.write(f"{service.bill:.2f}")
+        file.write(f"{service.cost:.2f}")
 
-    print(f"\nCorresponding .mem file created: {filename}")
+    print(f"\nCorresponding .svc file created: {filename}")
 
     return
     
-def addService():
+def addService():#TESTED
     adding = Service()
     try:
-        name = input("Enter service name")
+        name = input("\nEnter service name: ")
         adding.setName(name)
 
-        code = int(input("Enter service code"))
+        code = int(input("Enter service code: "))
         adding.setCode(code)
 
-        desc = input("Enter service description")
+        desc = input("Enter service description: ")
         adding.setDesc(desc)
 
-        cost = input("Enter service cost")
+        cost = float(input("Enter service cost: "))
         adding.setCost(cost)
 
-        if (services.get(adding.code) is None):
-            services[adding.code] = adding
+        if (services.get(code) is None):
+            services[code] = adding
             writeServiceFile(adding)
-
+        else:
+            print("\nService with that code already exists!")
 
     except Exception as e:
-            print(f"Unable to add due to ({e}) error")
+            print(f"Unable to add due to error ({e})")
 
     return
+
+def editService():#TESTED
+    editing = None
+    try:
+        ID = int(input("\nEnter the service code: "))
+        editing = services.get(ID)
+    except Exception as e:
+        print(f"Unable to edit due to error ({e})")
+    
+
+    if editing is not None:
+        editing.display()
+
+        print("\nOptions:")
+        print("1: Edit name")
+        print("2: Edit code")
+        print("3: Edit description")
+        print("4: Edit cost")
+
+        choice = 0
+        try:
+            choice = int(input("Select an option: "))
+        except:
+            print("\nOnly numeric characters allowed!")
+
+        try:
+            if (choice == 1):
+                name = input("Please enter the new name: ")
+                editing.setName(name)
+
+            elif (choice == 2):
+                code = int(input("Please enter in the new service code: "))
+                
+                if (services.get(code) is not None):
+                    print("\nAnother service has this code!")
+                    raise ValueError
+                
+                editing.setCode(code)
+
+            elif (choice == 3):
+                desc = input("Please enter in the new description: ")
+                editing.setDesc(desc)
+
+            elif (choice == 4):
+                cost = float(input("Please enter in the cost: "))
+                editing.setCost(cost)
+
+            else:
+                print("\nInvalid option selected!")
+                return
+            
+
+            services.pop(ID)
+            services[editing.code] = editing
+            writeServiceFile(editing, ID)
+
+        except Exception as e:
+            print(f"Unable to edit due to error ({e})")
+    else:
+        print("\nInvalid ID number")
+    return
+
+def removeService():#TESTED
+    removing = None
+
+    try:
+        ID = int(input("\nEnter the service code: "))
+        removing = services.get(ID)
+
+        if removing is not None:
+            removing.display()
+
+            affirm = input("Are you sure you would like to remove? (y/n): ")
+            if (affirm == 'y'):
+                services.pop(ID)
+                removeServiceFile(ID)
+
+            elif (affirm == "n"):
+                print("\nNot removed.")
+            else:
+                print("\nInvalid Input. Not removed.")
+    except Exception as e:
+            print(f"Unable to remove due to error ({e})")
+
+    return
+
+def generateReports():
+    print("\n1: Generate Provider summary report")
+    print("2: Generate Member summary report")
+    print("3: Generate a Provider EFT report")
+    
+    choice = 0
+    try:
+        choice = int(input("Select an option: "))
+    except:
+        print("\nOnly numeric characters allowed!")
+    
+    currentDate = datetime.now()
+
+    if choice == 1:  # Provider summary report
+        generateProviderSummaryReport(currentDate)
+    elif choice == 2:  # Member summary report
+        generateMemberSummaryReport(currentDate)
+    elif choice == 3:  # Provider EFT report
+        generateProviderEFTReport(currentDate)
+    else:
+        print("Invalid input. No report generated.")
+
+
+def generateProviderSummaryReport(currentDate):
+    for providerID, provider in providers.items():
+        providerRecords = getProviderRecords(providerID, currentDate)
+
+        if providerRecords:
+            reportData = f"Provider summary report generated for {provider.name} on {currentDate.strftime('%Y-%m-%d')}\n\n"
+            reportData += f"Provider Name: {provider.name}\n"
+            reportData += f"Provider Number: {provider.number}\n"
+            reportData += f"Provider Address: {provider.address}, {provider.city}, {provider.state} {provider.zipCode}\n\n"
+
+            for record in providerRecords:
+                reportData += f"Date of Service: {record.serviceDate}\n"
+                reportData += f"Date and Time Data Inputted to Computer: {record.currentTime}\n"
+                reportData += f"Member Name: {members[record.memberID].name}\n"
+                reportData += f"Member Number: {record.memberID}\n"
+                reportData += f"Service Code: {record.serviceCode}\n"
+                reportData += f"Fee: {record.bill}\n\n"
+
+            reportData += "\n" + "=" * 50 + "\n"
+
+            writeReportToFile(f"Provider_Summary_Report_{provider.number}", reportData)
+    
+
+
+def generateMemberSummaryReport(currentDate):
+    for memberID, member in members.items():
+        memberRecords = getMemberRecords(memberID, currentDate)
+
+        if memberRecords:
+            reportData_header = f"Member summary report generated for {member.name} on {currentDate.strftime('%Y-%m-%d')}\n\n"
+            reportData = f"{reportData_header}Member Name: {member.name}\n"
+            reportData += f"Member Number: {member.number}\n"
+            reportData += f"Member Address: {member.address}, {member.city}, {member.state} {member.zipCode}\n\n"
+
+            for record in memberRecords:
+                provider_name = providers[record.providerID].name if record.providerID in providers else "Unknown Provider"
+                service_name = services[record.serviceCode].name if record.serviceCode in services else "Unknown Service"
+
+                reportData += f"Date of Service: {record.serviceDate}\n"
+                reportData += f"Provider Name: {provider_name}\n"
+                reportData += f"Service Name: {service_name}\n\n"
+
+            reportData += "\n" + "=" * 50 + "\n"
+
+            filename = f"Member_Summary_Report_{member.name}_{currentDate.strftime('%Y-%m-%d')}.txt"
+            writeReportToFile(filename, reportData)
+
+
+def generateProviderEFTReport(currentDate):
+    for providerID, provider in providers.items():
+        providerRecords = getProviderRecords(providerID, currentDate)
+
+        if providerRecords:
+            reportData_header = f"Provider summary report generated for {provider.name} on {currentDate.strftime('%Y-%m-%d')}\n\n"
+            totalAmount = sum(record.bill for record in providerRecords)
+            reportData = f"Provider EFT report generated for {provider.name} on {currentDate.strftime('%Y-%m-%d')}\n"
+            reportData += f"Total Amount to be Transferred: ${totalAmount}\n\n"
+            
+            writeReportToFile(f"Provider_EFT_Report_{provider.number}", reportData)
+
+
+def writeReportToFile(report_name, reportData):
+    reports_dir = "Records"
+    os.makedirs(reports_dir, exist_ok=True)
+
+    reportFilename = f"{report_name}_{datetime.now().strftime('%Y%m%d%H%M%S')}.rec"
+    report_filepath = os.path.join(reports_dir, reportFilename)
+
+    with open(report_filepath, "w") as report_file:
+        report_file.write(reportData)
+
+
+def getProviderRecords(providerID, currentDate):
+    # Filter records for the last week for a specific provider
+    providerRecords = [record for record in records if record.providerID == providerID
+                        and currentDate - timedelta(days=7) <= record.serviceDate <= currentDate]
+
+    return providerRecords
+
+def getMemberRecords(memberID, currentDate):
+    # Filter records for the last week for a specific member
+    memberRecords = [record for record in records if record.memberID == memberID
+                        and currentDate - timedelta(days=7) <= record.serviceDate <= currentDate]
+
+    return memberRecords
 
 def main():
     addFiles()

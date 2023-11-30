@@ -51,7 +51,7 @@ class Service():
         return True
     
     def display(self):
-        print("\Service Information:")
+        print("\nService Information:")
         print(f"Name: {self.name}")
         print(f"Service code: {self.code:09d}")
         print(f"Description: {self.desc}")
