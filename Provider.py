@@ -8,6 +8,10 @@ class Provider(Member):
         self.serviceCodes = []  # List to store service codes
 
     def addService(self, inServiceCode: int) -> bool:
+        if (inServiceCode < 0 or inServiceCode > 999999999):
+            print("Service code must be 9 digits long!")
+            raise ValueError
+
         if inServiceCode not in self.serviceCodes:
             self.serviceCodes.append(inServiceCode)
             return True
@@ -16,6 +20,10 @@ class Provider(Member):
             return False
 
     def removeService(self, inServiceCode: int) -> bool:
+        if (inServiceCode < 0 or inServiceCode > 999999999):
+            print("Service code must be 9 digits long!")
+            raise ValueError
+
         if inServiceCode in self.serviceCodes:
             self.serviceCodes.remove(inServiceCode)
             return True

@@ -122,18 +122,10 @@ def test_setters_comments_incorrect(): #ERROR
     with pytest.raises(TypeError):
         test.setComments(29)
 
-
-
-
-def test_setters_time_incorrect_value():
-    test = Record()
-    with pytest.raises(AttributeError):
-        test.setTime()
-
 def test_setters_date_incorrect_value():
     test = Record()
-    with pytest.raises(AttributeError):
-        test.setTime()
+    with pytest.raises(TypeError):
+        test.setDate("asdf")
 
 def test_setters_provider_incorrect_value():
     test = Record()
@@ -153,6 +145,6 @@ def test_setters_bill_incorrect_value():
 
 def test_setters_comments_incorrect_value():
     test = Record()
-    assert test.setComments("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == False
+    assert test.setComments("A" * 200) == False
 
 
