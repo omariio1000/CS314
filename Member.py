@@ -13,8 +13,8 @@ class Member():
         self.zipCode = None
         self.status = inStatus
 
-        if (inName == None or inNumber == None or inAddress == None or inCity == None
-            or inState == None or inZip == None or inStatus == None):
+        if (inName == None and inNumber == None and inAddress == None and inCity == None
+            and inState == None and inZip == None and inStatus == None):
                 return
 
         ret = True

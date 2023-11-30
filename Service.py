@@ -1,5 +1,4 @@
 #Service class
-import os
 class Service():
     def __init__(self, inCode: int = None, inName: str = None, inDesc: str = None, inCost: float = None):
         self.code = None
@@ -7,7 +6,7 @@ class Service():
         self.desc = None
         self.cost = None
 
-        if (inCode == None or inName == None or inDesc == None or inCost == None):
+        if (inCode == None and inName == None and inDesc == None and inCost == None):
             return
 
         ret = True

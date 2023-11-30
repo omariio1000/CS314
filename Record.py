@@ -1,7 +1,6 @@
 #Record class (to write to disk)
 
 from datetime import datetime
-import os
 class Record():
     def __init__(self, inTime: datetime = None, inServiceDate: datetime = None, inProv: int = None, 
                  inMem: int = None, inServ: int = None, inBill: float = None, inComments: str = None):
@@ -14,8 +13,8 @@ class Record():
         self.bill = None
         self.comments = None
 
-        if (inTime == None or inServiceDate == None or inProv == None or inMem == None
-            or inServ == None or inBill == None):
+        if (inServiceDate == None and inProv == None and inMem == None
+            and inServ == None and inBill == None):
                 return
 
         ret = True
@@ -35,7 +34,7 @@ class Record():
 
     def setTime(self, inTime: datetime = None) -> None:
         if (inTime == None):
-            self.currentTime = datetime.datetime.now()
+            self.currentTime = datetime.now()
             return
         elif not isinstance(inTime, datetime):
                   raise TypeError

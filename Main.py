@@ -5,6 +5,7 @@ from Record import Record
 from Manager import manager
 from datetime import datetime
 from Manager import manager
+from Encryption import *
 import os
 
 records = []
@@ -12,110 +13,152 @@ services = dict()
 members = dict()
 providers = dict()
 
+managerPasses = dict()
+providerPasses = dict()
 
-def providerMode():
-    print("\nWelcome to provider mode.")
-    print("\n1. Verify member id")
-    print("\n2. Print Records")
-    print("\n3. Create a Record")
+def providerMode(provID: int):#TESTED
+    print(f"\nWelcome to provider mode: {providers[provID].name}")
+    running = True
+    
+    while (running):
+        print("Options:")
+        print("1: Verify member ID")
+        print("2: Print Records")
+        print("3: Create a record")
+        print("4: Log out")
 
-    choice = int(input("\nSelect your decision: "))
+        choice = 0
+        try:
+            choice = int(input("Select your mode: "))
+        except:
+            print("\nOnly numeric characters allowed!")
 
-    if (choice == 1):
-        verifyID()
+        if (choice == 1):
+            verifyID()
 
-    if (choice == 2):
-        provID = int(input("\nWhat is your provider ID: "))
-        printRecords(provID)
+        elif (choice == 2):
+            printRecords(provID)
 
-    if (choice == 3):
-        createRecords()
+        elif (choice == 3):
+            createRecords(provID)
 
-    else:
-        print("\nPlease enter 1, 2, or 3!")
+        elif (choice == 4):
+            running = False
+            print("Logging out...")
+
+        else:
+            print("\nInvalid option")
 
     return
 
-
-def verifyID():
+def verifyID():#TESTED
     ID = int(input("\nEnter the ID of the member: "))
 
     if members.get(ID) is not None:
+        print(f"\n{members[ID].name} status:")
         if (members[ID].status == True):
-            print("\nSuspended")
+            print("Suspended")
         else:
-            print("\nValidated")
+            print("Validated")
     else:
         print("\nInvalid ID number")
 
-
-def printRecords(provID):
+def printRecords(provID: int):#TESTED
+    print("\n" + "-" * 100)
 
     for key in records:
         if key.providerID == provID:
-            print("-" * 100)
-            print(f"Current: {key.currentTime},")
-            print(f"Service Date: {key.serviceDate},")
-            print(f"Provider ID: {key.providerID},")
-            print(f"Member ID: {key.memberID},")
-            print(f"Service Code: {key.serviceCode},")
-            print(f"Bill: {key.bill},")
-            print(f"Comments: {key.comments}")
+            serviceDate = key.serviceDate.strftime("%Y-%m-%d")
+            print(f"Record Creation Time: {key.currentTime}")
+            print(f"Service Date: {serviceDate}")
+            print(f"Provider ID: {key.providerID:09d}")
+            print(f"Member ID: {key.memberID:09d}")
+            print(f"Service Code: {key.serviceCode:09d}")
+            print(f"Bill: {key.bill:.2f}")
+            if (key.comments != None):
+                print(f"Comments: {key.comments}")
+            else:
+                print("No comments provided")
             print("-" * 100)
         else:
             print("\nNo records found for the given provider ID.")
 
-def writeRecordToFile(record):
+def writeRecordToFile(record):#TESTED
         scriptDir = os.path.dirname(__file__)
         recordDir = scriptDir + "/Records/"
 
         # Create a filename based on the timestamp
-        filename = f"{record.currentTime.strftime('%Y_%m_%d_%H_%M_%S')}.txt"
+        filename = f"{record.currentTime.strftime('%Y_%m_%d_%H_%M_%S')}.rec"
         filepath = os.path.join(recordDir, filename)
 
         # Open the file for writing
         with open(filepath, "w") as file:
             # Write record data to the file
             file.write(f"{record.serviceDate.strftime('%Y_%m_%d')}\n")
-            file.write(f"{record.providerID}\n")
-            file.write(f"{record.memberID}\n")
-            file.write(f"{record.serviceCode}\n")
-            file.write(f"{record.bill}\n")
-            file.write(f"{record.comments}\n")
+            file.write(f"{record.providerID:09d}\n")
+            file.write(f"{record.memberID:09d}\n")
+            file.write(f"{record.serviceCode:09d}\n")
+            file.write(f"{record.bill:.2f}\n")
+
+            if (record.comments is not None):
+                file.write(f"{record.comments}\n")
     
-def createRecords():
-
-   # Layaal please make this write to a file, if you need help just let me know on discord - Abdirizak
-    print("You're creating a record, please follow instructions below")
+def createRecords(provID: int):#TESTED
+    print("\nYou're creating a record, please follow instructions below")
     try:
-        time_input = input(
-            "Enter Current Time (YYYY/MM/DD/HH/MM/SS) or 'now' for current time: ")
+        serviceDate = datetime.strptime(str(input("Enter Service Date (YYYY/MM/DD): ")), '%Y/%m/%d')
 
-        if time_input.lower() == 'now':
-            currentTime = datetime.now()
-        else:
-            try:
-                currentTime = datetime.strptime(
-                    time_input, "%Y/%m/%d/%H/%M/%S")
-            except ValueError:
-                print("Incorrect time format. Record will not be created.")
-                return
-
-        serviceDate = str(input("Enter Service Date (YYYY/MM/DD): "))
-        providerId = int(input("Enter Provider ID: "))
         memberId = int(input("Enter Member ID: "))
+        if members.get(memberId) is  None:
+            print("Invalid member ID!")
+            raise ValueError
+
         serviceCode = int(input("Enter Service Code: "))
-        bill = float(input("Enter bill: "))
-        comments = str(input("Enter any comments please: "))
-        newRecord = Record(currentTime, serviceDate, providerId,
-                           memberId, serviceCode, bill, comments)
+        if services.get(serviceCode) is  None:
+            print("Invalid service code!")
+            raise ValueError
+
+        bill = services[serviceCode].cost
+
+        print("Enter any comments. For no comments type \"none\".")
+        comments = str(input())
+        if (comments == "none"):
+            comments = None
+
+        newRecord = Record(None, serviceDate, provID, memberId, serviceCode, bill, comments)
         records.append(newRecord)
         writeRecordToFile(newRecord)
-    except ValueError:
-        print("An error has occured Record will not be created.")
+    except Exception as e:
+        print(f"An error ({e}) has occured.\nRecord will not be created.")
+
+def getPasses():#TESTED
+    scriptDir = os.path.dirname(__file__)
+    passDir = scriptDir + "/Passwords/"
+
+    managerFile = open(passDir + "managers.pass", "r")
+    providerFile = open(passDir + "providers.pass", "r")
+
+    managerData = managerFile.readlines()
+    providerData = providerFile.readlines()
+
+    for data in managerData:
+        if (data[-1] == '\n'):
+            data = data[:-1]
+
+        userPass = data.split(":")
+        managerPasses[userPass[0]] = userPass[1]
 
 
-def addFiles():
+    for data in providerData:
+        if (data[-1] == '\n'):
+            data = data[:-1]
+
+        userPass = data.split(":")
+        providerPasses[int(userPass[0])] = userPass[1]
+    
+    return
+
+def addFiles():#TESTED
     scriptDir = os.path.dirname(__file__)  # absolute dir
     recordDir = scriptDir + "/Records/"
     serviceDir = scriptDir + "/Services/"
@@ -144,11 +187,11 @@ def addFiles():
         serviceDate = datetime.strptime(fileData[0], '%Y_%m_%d')
         # print(serviceDate)
         providerId = int(fileData[1])
-        # print("{:06d}".format(providerId))
+        # print("{:09d}".format(providerId))
         memberId = int(fileData[2])
-        # print("{:06d}".format(memberId))
+        # print("{:09d}".format(memberId))
         serviceCode = int(fileData[3])
-        # print("{:06d}".format(serviceCode))
+        # print("{:09d}".format(serviceCode))
         bill = float(fileData[4])
         # print("{:.2f}".format(bill))
         comments = ""
@@ -175,7 +218,7 @@ def addFiles():
             count += 1
 
         code = int(fileData[0])
-        # print("{:06d}".format(code))
+        # print("{:09d}".format(code))
         name = fileData[1]
         # print(name)
         desc = fileData[2]
@@ -202,7 +245,7 @@ def addFiles():
         name = fileData[0]
         # print(name)
         number = int(fileData[1])
-        # print("{:06d}".format(number))
+        # print("{:09d}".format(number))
         address = fileData[2]
         # print(address)
         city = fileData[3]
@@ -238,7 +281,7 @@ def addFiles():
         name = fileData[0]
         # print(name)
         number = int(fileData[1])
-        # print("{:06d}".format(number))
+        # print("{:09d}".format(number))
         address = fileData[2]
         # print(address)
         city = fileData[3]
@@ -256,7 +299,7 @@ def addFiles():
         newProvider = Provider(name, number, address, city, state, zip, status)
         serviceList = fileData[7].split(",")
         for service in serviceList:
-            # print("{:06d}".format(int(service)))
+            # print("{:09d}".format(int(service)))
             newProvider.addService(int(service))
         providers[number] = newProvider
     # print(providers)
@@ -265,46 +308,38 @@ def addFiles():
 
 def main():
     addFiles()
-
-    '''
-    TO-DO LIST:
-        File reading stuff - DONE
-        Manager mode - DONE
-        Provider mode - DONE
-        Unit testing - DONE
-
-        Other file handling stuff - Layaal
-            Writing services to directory
-            Writing members to directory
-            Writing providers to directory
-            Writing records to directory
-            Records/EFT stuff to directories:
-                Provider summary report
-                Member summary report
-                Provider EFT
-                Member EFT
-
-        Other - Omar
-            Manager and provider access codes 
-    '''
+    getPasses()
 
     print("Welcome to ChocAn!")
     running = True
-    while (running):
-       # print(members[1].number)
+    while (running):     
         manager_mode = manager(providers, members, records)
-        print("\nOptions:")
+        print("Options:")
         print("1: Manager Mode")
         print("2: Provider Mode")
         print("3: Quit")
 
-        choice = int(input("Select your mode: "))
+        choice = 0
+        try:
+            choice = int(input("Select your mode: "))
+        except:
+            print("\nOnly numeric characters allowed!")
 
         if (choice == 1):
             manager_mode.welcome()
 
         elif (choice == 2):
-            providerMode()
+            provNum = int(input("\nEnter your provider ID: "))
+            provPass = input("Enter your password: ")
+
+            try:
+                if (providerPasses[provNum] == encrypt(provPass)):
+                    providerMode(provNum)
+                
+                else:
+                    print("Password is incorrect!")
+            except KeyError:
+                print("\nNo provider with that ID found!")
 
         elif (choice == 3):
             print("\nExiting terminal...\nSee you again soon!\n")
