@@ -53,7 +53,7 @@ class Service():
     def display(self):
         print("\Service Information:")
         print(f"Name: {self.name}")
-        print(f"Service code: {self.code}")
+        print(f"Service code: {self.code:09d}")
         print(f"Description: {self.desc}")
         print(f"Cost: {self.cost:.2f}")
 

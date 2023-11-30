@@ -2,9 +2,7 @@ from Member import Member
 from Provider import Provider
 from Service import Service
 from Record import Record
-from Manager import manager
 from datetime import datetime
-from Manager import manager
 from Encryption import *
 import os
 
@@ -312,14 +310,22 @@ def managerMode(userName: str):
 
     while (running):
         print("\nOptions:")
-        print("1: Edit member information")
-        print("2: Edit provider information")
-        print("3: Add a member")
-        print("4: Add a provider")
-        print("5: Remove a member")
-        print("6: Remove a provider")
-        print("7: Generate reports")
-        print("8: Log out")
+        print("1: Add member")
+        print("2: Edit member")
+        print("3: Remove Member")
+
+        print("4: Add provider")
+        print("5: Edit provider")
+        print("6: Remove provider")
+        
+        print("7: Add service")
+        print("8: Edit service")
+        print("9: Remove service")
+
+        print("10: Generate reports")
+        print("11: Change your password")
+        print("12: Change provider password")
+        print("13: Log out")
 
         choice = 0
         try:
@@ -328,27 +334,26 @@ def managerMode(userName: str):
             print("\nOnly numeric characters allowed!")
 
         if (choice == 1):
-            editMember()
+            addMember()
         
         elif (choice == 2):
-            editMember(True)
-        
+            editMember()
+
         elif (choice == 3):
-            return
+            removeMember()
         
         elif (choice == 4):
-            return
-        
+            addMember(True)
+
         elif (choice == 5):
-            return
+            editMember(True)
         
         elif (choice == 6):
-            return
+            removeMember(True)
         
-        elif (choice == 7):
-            return
+
         
-        elif (choice == 8):
+        elif (choice == 13):
             running = False
             print("\nLogging out...")
         
@@ -357,13 +362,28 @@ def managerMode(userName: str):
 
     return
 
+# Function to remove the corresponding .mem file
+def removeMemberFile(ID: int):#TESTED
+    scriptDir = os.path.dirname(__file__)
+    memberDir = scriptDir + "/Members/"
+
+    # Create a filename based on the member number
+    filename = f"{ID:09d}.mem"
+    filepath = os.path.join(memberDir, filename)
+
+    # Remove the file if it exists
+    if os.path.exists(filepath):
+        os.remove(filepath)
+        print(f"\nCorresponding .mem file ({filename}) removed.")
+    else:
+        print(f"\nCorresponding .mem file not found: {filename}")
+
 def writeMemberToFile(member: Member, oldId: int = -1):#TESTED
     scriptDir = os.path.dirname(__file__)
     memberDir = scriptDir + "/Members/"
 
     if (oldId != -1):
-        oldFile = os.path.join(memberDir, f"{oldId:09d}.mem")
-        os.remove(oldFile)
+        removeMemberFile(oldId)
 
     # Create a filename based on the member number
     filename = f"{member.number:09d}.mem"
@@ -378,17 +398,34 @@ def writeMemberToFile(member: Member, oldId: int = -1):#TESTED
         file.write(f"{member.city}\n")
         file.write(f"{member.state}\n")
         file.write(f"{member.zipCode}\n")
-        file.write(f"{int(member.status)}\n")
+        file.write(f"{int(member.status)}")
+
+    print(f"\nCorresponding .mem file created: {filename}")
 
     return
+
+# Function to remove the corresponding .prov file
+def removeProviderFile(ID: int):#TESTED
+    scriptDir = os.path.dirname(__file__)
+    providerDir = scriptDir + "/Providers/"
+
+    # Create a filename based on the provider number
+    filename = f"{ID:09d}.prov"
+    filepath = os.path.join(providerDir, filename)
+
+    # Remove the file if it exists
+    if os.path.exists(filepath):
+        os.remove(filepath)
+        print(f"\nCorresponding .prov file ({filename}) removed.")
+    else:
+        print(f"\nCorresponding .prov file not found: {filename}")
 
 def writeProviderToFile(provider: Provider, oldId: int = -1):#TESTED
     scriptDir = os.path.dirname(__file__)
     providerDir = scriptDir + "/Providers/"
 
     if (oldId != -1):
-        oldFile = os.path.join(providerDir, f"{oldId:09d}.prov")
-        os.remove(oldFile)
+        removeProviderFile(oldId)
 
     # Create a filename based on the provider number
     filename = f"{provider.number:09d}.prov"
@@ -403,14 +440,17 @@ def writeProviderToFile(provider: Provider, oldId: int = -1):#TESTED
         file.write(f"{provider.city}\n")
         file.write(f"{provider.state}\n")
         file.write(f"{provider.zipCode}\n")
-        file.write(f"{int(provider.status)}\n")
+        file.write("0\n")
         for service in provider.serviceCodes:
             file.write(f"{service:09d},")
+
+    print(f"\nCorresponding .prov file created: {filename}")
 
     return
 
 def editMember(providerMode: bool = False):#TESTED
     editing = None
+    ID = 0
     
     if (providerMode):
         ID = int(input("\nEnter the ID of the provider: "))
@@ -471,7 +511,7 @@ def editMember(providerMode: bool = False):#TESTED
                 editing.setZip(zip)
             
             elif (choice == 7 and not providerMode):
-                status = input("Enter \"Valid\" or \"Suspended\"")
+                status = input("Enter \"Valid\" or \"Suspended\": ")
                 if (status == "Valid"):
                     editing.setStatus(True)
                 elif (status == "Suspended"):
@@ -482,9 +522,9 @@ def editMember(providerMode: bool = False):#TESTED
             elif (choice == 7 or choice == 8 and providerMode):
                 serviceCode = 0
                 if choice == 7:
-                    serviceCode = int(input("Enter service code you'd like to add"))
+                    serviceCode = int(input("Enter service code you'd like to add: "))
                 else: 
-                    serviceCode = int(input("Enter service code you'd like to remove"))
+                    serviceCode = int(input("Enter service code you'd like to remove: "))
 
                 service = services.get(serviceCode)
 
@@ -514,6 +554,174 @@ def editMember(providerMode: bool = False):#TESTED
     else:
         print("\nInvalid ID number")
     
+    return
+
+def addMember(providerMode: bool = False):#TESTED
+    adding = None
+    if (providerMode):
+        adding = Provider()
+    else:
+        adding = Member()
+    
+    if (adding is not None):
+        try:
+            name = input("\nPlease enter the name: ")
+            adding.setName(name)
+
+            newID = int(input("Please enter in the ID number: "))
+            adding.setNumber(newID)
+
+            address = input("Please enter in the address: ")
+            adding.setAddr(address)
+
+            city = input("Please enter in the name of the city: ")
+            adding.setCity(city)
+
+            state = input("Please enter in the name of the state: ")
+            adding.setState(state)
+
+            zip = int(input("Please enter the zip code: "))
+            adding.setZip(zip)
+        
+            if (not providerMode):
+                status = input("Enter status as \"Valid\" or \"Suspended\": ")
+                if (status == "Valid"):
+                    adding.setStatus(True)
+                elif (status == "Suspended"):
+                    adding.setStatus(False)
+                else:
+                    print("\nInvalid status entered!")
+            
+            else:
+                running = True
+                while (running):
+                    print("\nIf done enter \"done\"")
+                    serviceCode = input("Enter a service code to add: ")
+                    if (serviceCode == "done"):
+                        running = False
+                    else:
+                        try:
+                            code = int(serviceCode)
+                            if (services.get(code) is not None):
+                                if (adding.addService(code) == True):
+                                    print("Service added.")
+                            else:
+                                print("Invalid service code! Not added to provider.")
+                        except:
+                            print("\nOnly numeric characters allowed!")
+            
+            if (providerMode):
+                if (providers.get(adding.number) is None):
+                    providers[adding.number] = adding
+                    writeProviderToFile(adding)
+                else:
+                    print("Provider with this ID already exists!")
+            else:
+                if (members.get(adding.number) is None):
+                    members[adding.number] = adding
+                    writeMemberToFile(adding)
+                else:
+                    print("Member with this ID already exists!")
+
+        except Exception as e:
+            print(f"Unable to add due to ({e}) error")
+
+    return
+
+def removeMember(providerMode: bool = False):#TESTED
+    removing = None
+    ID = 0
+    
+    if (providerMode):
+        ID = int(input("\nEnter the ID of the provider: "))
+        removing = providers.get(ID)
+    else:
+        ID = int(input("\nEnter the ID of the member: "))
+        removing = members.get(ID)
+    try:
+        if removing is not None:
+            removing.display()
+
+            affirm = input("Are you sure you would like to remove? (y/n): ")
+            if (affirm == 'y'):
+                if(providerMode):
+                    providers.pop(ID)
+                    removeProviderFile(ID)
+                else:
+                    members.pop(ID)
+                    removeMemberFile(ID)
+
+            elif (affirm == "n"):
+                print("\nNot removed.")
+            else:
+                print("\nInvalid Input. Not removed.")
+    except Exception as e:
+            print(f"Unable to remove due to ({e}) error")
+
+    return
+
+# Function to remove the corresponding .svc file
+def removeServiceFile(ID: int):#TESTED
+    scriptDir = os.path.dirname(__file__)
+    serviceDir = scriptDir + "/Services/"
+
+    # Create a filename based on the service code
+    filename = f"{ID:09d}.svc"
+    filepath = os.path.join(serviceDir, filename)
+
+    # Remove the file if it exists
+    if os.path.exists(filepath):
+        os.remove(filepath)
+        print(f"\nCorresponding .svc file ({filename}) removed.")
+    else:
+        print(f"\nCorresponding .svc file not found: {filename}")
+
+def writeServiceFile(service: Service, oldId: int = -1):
+    scriptDir = os.path.dirname(__file__)
+    serviceDir = scriptDir + "/Services/"
+
+    if (oldId != -1):
+        removeServiceFile(oldId)
+
+    # Create a filename based on the member number
+    filename = f"{service.code:09d}.svc"
+    filepath = os.path.join(serviceDir, filename)
+
+    # Open the file for writing
+    with open(filepath, "w") as file:
+        # Write member data to the file
+        file.write(f"{service.code:09d}\n")
+        file.write(f"{service.name}\n")
+        file.write(f"{service.desc}\n")
+        file.write(f"{service.bill:.2f}")
+
+    print(f"\nCorresponding .mem file created: {filename}")
+
+    return
+    
+def addService():
+    adding = Service()
+    try:
+        name = input("Enter service name")
+        adding.setName(name)
+
+        code = int(input("Enter service code"))
+        adding.setCode(code)
+
+        desc = input("Enter service description")
+        adding.setDesc(desc)
+
+        cost = input("Enter service cost")
+        adding.setCost(cost)
+
+        if (services.get(adding.code) is None):
+            services[adding.code] = adding
+            writeServiceFile(adding)
+
+
+    except Exception as e:
+            print(f"Unable to add due to ({e}) error")
+
     return
 
 def main():
