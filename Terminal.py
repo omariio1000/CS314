@@ -87,8 +87,9 @@ class Terminal():
             print("1: Verify member ID")
             print("2: Print Records")
             print("3: Create a record")
-            print("4: Change your password")
-            print("5: Log out")
+            print("4: Display services")
+            print("5: Change your password")
+            print("6: Log out")
 
             choice = 0
             try:
@@ -106,14 +107,34 @@ class Terminal():
                 self.createRecords(provID)
 
             elif (choice == 4):
-                self.updateProviderPassword(provID)
+                self.displayServices(provID)
 
             elif (choice == 5):
+                self.updateProviderPassword(provID)
+
+            elif (choice == 6):
                 running = False
                 print("\nLogging out...")
 
             else:
                 print("\nInvalid option")
+
+        return
+
+    def displayServices(self, provID: int):
+        provider = self.providers.get(provID)
+        if (provider is None):
+            print("\nNo provider found with that ID!")
+            return
+
+        print("\n" + "-" * 100)
+        for serviceCode in provider.serviceCodes:
+            service = self.services.get(serviceCode)
+            if (service is None):
+                print("\nFatal error!")
+                return
+            service.display()
+            print("\n" + "-" * 100)
 
         return
 
