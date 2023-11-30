@@ -65,6 +65,10 @@ Print all records the provider has made, that are stored in the filesystem.
 
 Create a service record and store it in the filesystem.
 
+**Displaying Services**
+
+Display a list of services offered and their descriptions, codes, and cost.
+
 **Change  password**
 
 Change provider password. Allows provider to view it before defciding whether or not to change it.
