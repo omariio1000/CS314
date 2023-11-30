@@ -14,7 +14,7 @@ providers = dict()
 managerPasses = dict()
 providerPasses = dict()
 
-def providerMode(provID: int):#TESTED
+def providerMode(provID: int):
     print(f"\nWelcome to provider mode: {providers[provID].name}")
     running = True
     
@@ -23,7 +23,8 @@ def providerMode(provID: int):#TESTED
         print("1: Verify member ID")
         print("2: Print Records")
         print("3: Create a record")
-        print("4: Log out")
+        print("4: Change your password")
+        print("5: Log out")
 
         choice = 0
         try:
@@ -41,6 +42,9 @@ def providerMode(provID: int):#TESTED
             createRecords(provID)
 
         elif (choice == 4):
+            updateProviderPassword(provID)
+
+        elif (choice == 5):
             running = False
             print("\nLogging out...")
 
@@ -49,7 +53,7 @@ def providerMode(provID: int):#TESTED
 
     return
 
-def verifyID():#TESTED
+def verifyID():
     ID = int(input("\nEnter the ID of the member: "))
 
     if members.get(ID) is not None:
@@ -61,7 +65,7 @@ def verifyID():#TESTED
     else:
         print("\nInvalid ID number")
 
-def printRecords(provID: int):#TESTED
+def printRecords(provID: int):
     print("\n" + "-" * 100)
 
     for key in records:
@@ -81,7 +85,7 @@ def printRecords(provID: int):#TESTED
         else:
             print("\nNo records found for the given provider ID.")
 
-def writeRecordToFile(record):#TESTED
+def writeRecordToFile(record):
         scriptDir = os.path.dirname(__file__)
         recordDir = scriptDir + "/Records/"
 
@@ -101,7 +105,7 @@ def writeRecordToFile(record):#TESTED
             if (record.comments is not None):
                 file.write(f"{record.comments}\n")
     
-def createRecords(provID: int):#TESTED
+def createRecords(provID: int):
     print("\nYou're creating a record, please follow instructions below")
     try:
         serviceDate = datetime.strptime(str(input("Enter Service Date (YYYY/MM/DD): ")), '%Y/%m/%d')
@@ -129,7 +133,7 @@ def createRecords(provID: int):#TESTED
     except Exception as e:
         print(f"An error ({e}) has occured.\nRecord will not be created.")
 
-def getPasses():#TESTED
+def getPasses():
     scriptDir = os.path.dirname(__file__)
     passDir = scriptDir + "/Passwords/"
 
@@ -174,8 +178,43 @@ def updatePasswords():
         for user, password in providerPasses.items():
             file.write(f"{user:09d}:{password}\n")
 
+def updateAdminPassword(user: str):
+    newUser = True
+    if (managerPasses.get(user) is not None):
+        newUser = False
+        affirm = input("\nWould you like to view your current password? (y/n): ")
+        if (affirm == 'y'):
+            print(f"Current password for user ({user}): \"" + decrypt(managerPasses.get(user)) + "\"")
+    
+    password = input("Enter your new password (0 to cancel): ")
+    try:
+        managerPasses[user] = encrypt(password)
+        if (newUser):
+            print("\nUser added successfully!")
+        else:
+            print("\nPassword set successfully!")
+    except Exception as e:
+            print(f"\bUnable to edit due to error ({e})")
 
-def addFiles():#TESTED
+    
+    updatePasswords()
+    return
+
+def updateProviderPassword(provID: int):
+    affirm = input("\nWould you like to view your current password? (y/n): ")
+    if (affirm == 'y'):
+        print(f"Current password for provider ({provID}): \"" + decrypt(providerPasses.get(provID)) + "\"")
+    try:
+        providerPasses.pop(provID)
+        password = input("Enter new password (0 to cancel): ")
+        providerPasses[provID] = encrypt(password)
+    except Exception as e:
+            print(f"Unable to edit due to error ({e})")
+
+    updatePasswords()
+    return
+
+def addFiles():
     scriptDir = os.path.dirname(__file__)  # absolute dir
     recordDir = scriptDir + "/Records/"
     serviceDir = scriptDir + "/Services/"
@@ -329,22 +368,26 @@ def managerMode(userName: str):
 
     while (running):
         print("\nOptions:")
-        print("1: Add member")
-        print("2: Edit member")
-        print("3: Remove Member")
 
-        print("4: Add provider")
-        print("5: Edit provider")
-        print("6: Remove provider")
-        
-        print("7: Add service")
-        print("8: Edit service")
-        print("9: Remove service")
+        print(" 1: Add member")
+        print(" 2: Edit member")
+        print(" 3: Remove Member")
+ 
+        print(" 4: Add provider")
+        print(" 5: Edit provider")
+        print(" 6: Remove provider")
+         
+        print(" 7: Add service")
+        print(" 8: Edit service")
+        print(" 9: Remove service")
 
         print("10: Generate reports")
+
         print("11: Change your password")
         print("12: Change provider password")
-        print("13: Log out")
+        print("13: Add new admin user")
+
+        print("14: Log out")
 
         choice = 0
         try:
@@ -381,8 +424,28 @@ def managerMode(userName: str):
 
         elif (choice == 10):
             generateReports()
+
+        elif (choice == 11):
+            updateAdminPassword(userName)
+
+        elif (choice == 12):
+            try:
+                provID = int(input("\nEnter a provider ID: "))
+                if (providers.get(provID) is not None):
+                    updateProviderPassword(provID)
+                else:
+                    raise ValueError
+            except Exception as e:
+                print(f"Unable to change password due to error ({e})")
         
         elif (choice == 13):
+            user = input("\nEnter a new username: ")
+            if (managerPasses.get(user) is None):
+                updateAdminPassword(user)
+            else:
+                print("Already have an admin with that username!")
+
+        elif (choice == 14):
             running = False
             print("\nLogging out...")
         
@@ -392,7 +455,7 @@ def managerMode(userName: str):
     return
 
 # Function to remove the corresponding .mem file
-def removeMemberFile(ID: int):#TESTED
+def removeMemberFile(ID: int):
     scriptDir = os.path.dirname(__file__)
     memberDir = scriptDir + "/Members/"
 
@@ -407,7 +470,7 @@ def removeMemberFile(ID: int):#TESTED
     else:
         print(f"\nCorresponding .mem file not found: {filename}")
 
-def writeMemberToFile(member: Member, oldId: int = -1):#TESTED
+def writeMemberToFile(member: Member, oldId: int = -1):
     scriptDir = os.path.dirname(__file__)
     memberDir = scriptDir + "/Members/"
 
@@ -434,7 +497,7 @@ def writeMemberToFile(member: Member, oldId: int = -1):#TESTED
     return
 
 # Function to remove the corresponding .prov file
-def removeProviderFile(ID: int):#TESTED
+def removeProviderFile(ID: int):
     scriptDir = os.path.dirname(__file__)
     providerDir = scriptDir + "/Providers/"
 
@@ -449,7 +512,7 @@ def removeProviderFile(ID: int):#TESTED
     else:
         print(f"\nCorresponding .prov file not found: {filename}")
 
-def writeProviderToFile(provider: Provider, oldId: int = -1):#TESTED
+def writeProviderToFile(provider: Provider, oldId: int = -1):
     scriptDir = os.path.dirname(__file__)
     providerDir = scriptDir + "/Providers/"
 
@@ -477,7 +540,7 @@ def writeProviderToFile(provider: Provider, oldId: int = -1):#TESTED
 
     return
 
-def editMember(providerMode: bool = False):#TESTED
+def editMember(providerMode: bool = False):
     editing = None
     ID = 0
 
@@ -516,91 +579,91 @@ def editMember(providerMode: bool = False):#TESTED
         except:
             print("\nOnly numeric characters allowed!")
 
-        # try:
-        if (choice == 1):
-            name = input("Please enter the new name: ")
-            editing.setName(name)
+        try:
+            if (choice == 1):
+                name = input("Please enter the new name: ")
+                editing.setName(name)
 
-        elif (choice == 2):
-            newID = int(input("Please enter in the new ID number: "))
+            elif (choice == 2):
+                newID = int(input("Please enter in the new ID number: "))
 
-            if (providerMode and providers.get(newID) is not None):
-                print("\nAnother provider has this ID!")
-                raise ValueError
-            elif (not providerMode and members.get(newID) is not None):
-                print("\nAnother member has this ID!")
-                raise ValueError
+                if (providerMode and providers.get(newID) is not None):
+                    print("\nAnother provider has this ID!")
+                    raise ValueError
+                elif (not providerMode and members.get(newID) is not None):
+                    print("\nAnother member has this ID!")
+                    raise ValueError
 
-            editing.setNumber(newID)
+                editing.setNumber(newID)
 
-        elif (choice == 3):
-            address = input("Please enter in the new address: ")
-            editing.setAddr(address)
+            elif (choice == 3):
+                address = input("Please enter in the new address: ")
+                editing.setAddr(address)
 
-        elif (choice == 4):
-            city = input("Please enter in the name of the new city: ")
-            editing.setCity(city)
+            elif (choice == 4):
+                city = input("Please enter in the name of the new city: ")
+                editing.setCity(city)
 
-        elif (choice == 5):
-            state = input("Please enter in the name of the new state: ")
-            editing.setState(state)
+            elif (choice == 5):
+                state = input("Please enter in the name of the new state: ")
+                editing.setState(state)
 
-        elif (choice == 6):
-            zip = int(input("Please enter the new zip code: "))
-            editing.setZip(zip)
-        
-        elif (choice == 7 and not providerMode):
-            status = input("Enter \"Valid\" or \"Suspended\": ")
-            if (status == "Valid"):
-                editing.setStatus(True)
-            elif (status == "Suspended"):
-                editing.setStatus(False)
-            else:
-                print("\nInvalid status entered!")
-        
-        elif (choice == 7 or choice == 8 and providerMode):
-            serviceCode = 0
-            if choice == 7:
-                serviceCode = int(input("Enter service code you'd like to add: "))
-            else: 
-                serviceCode = int(input("Enter service code you'd like to remove: "))
-
-            service = services.get(serviceCode)
-
-            if (service is not None):
-                if choice == 7:
-                    editing.addService(serviceCode)
+            elif (choice == 6):
+                zip = int(input("Please enter the new zip code: "))
+                editing.setZip(zip)
+            
+            elif (choice == 7 and not providerMode):
+                status = input("Enter \"Valid\" or \"Suspended\": ")
+                if (status == "Valid"):
+                    editing.setStatus(True)
+                elif (status == "Suspended"):
+                    editing.setStatus(False)
                 else:
-                    editing.removeService(serviceCode)
+                    print("\nInvalid status entered!")
+            
+            elif (choice == 7 or choice == 8 and providerMode):
+                serviceCode = 0
+                if choice == 7:
+                    serviceCode = int(input("Enter service code you'd like to add: "))
+                else: 
+                    serviceCode = int(input("Enter service code you'd like to remove: "))
+
+                service = services.get(serviceCode)
+
+                if (service is not None):
+                    if choice == 7:
+                        editing.addService(serviceCode)
+                    else:
+                        editing.removeService(serviceCode)
+                else:
+                    print("\nInvalid service code")
+
             else:
-                print("\nInvalid service code")
+                print("\nInvalid option selected!")
+                return
+            
+            if (providerMode):
+                providers.pop(ID)
+                providers[editing.number] = editing
+                writeProviderToFile(editing, ID)
 
-        else:
-            print("\nInvalid option selected!")
-            return
-        
-        if (providerMode):
-            providers.pop(ID)
-            providers[editing.number] = editing
-            writeProviderToFile(editing, ID)
+                temp = providerPasses[ID]
+                providerPasses.pop(ID)
+                providerPasses[editing.number] = temp
+                updatePasswords()
+            else:
+                members.pop(ID)
+                members[editing.number] = editing
+                writeMemberToFile(editing, ID)
 
-            temp = providerPasses[ID]
-            providerPasses.pop(ID)
-            providerPasses[editing.number] = temp
-            updatePasswords()
-        else:
-            members.pop(ID)
-            members[editing.number] = editing
-            writeMemberToFile(editing, ID)
-
-        # except Exception as e:
-        #     print(f"Unable to edit due to error ({e})")
+        except Exception as e:
+            print(f"Unable to edit due to error ({e})")
     else:
         print("\nInvalid ID number")
     
     return
 
-def addMember(providerMode: bool = False):#TESTED
+def addMember(providerMode: bool = False):
     adding = None
     if (providerMode):
         adding = Provider()
@@ -675,7 +738,7 @@ def addMember(providerMode: bool = False):#TESTED
 
     return
 
-def removeMember(providerMode: bool = False):#TESTED
+def removeMember(providerMode: bool = False):
     removing = None
     ID = 0
     
@@ -712,7 +775,7 @@ def removeMember(providerMode: bool = False):#TESTED
     return
 
 # Function to remove the corresponding .svc file
-def removeServiceFile(ID: int):#TESTED
+def removeServiceFile(ID: int):
     scriptDir = os.path.dirname(__file__)
     serviceDir = scriptDir + "/Services/"
 
@@ -750,7 +813,7 @@ def writeServiceFile(service: Service, oldId: int = -1):
 
     return
     
-def addService():#TESTED
+def addService():
     adding = Service()
     try:
         name = input("\nEnter service name: ")
@@ -776,7 +839,7 @@ def addService():#TESTED
 
     return
 
-def editService():#TESTED
+def editService():
     editing = None
     try:
         ID = int(input("\nEnter the service code: "))
@@ -837,7 +900,7 @@ def editService():#TESTED
         print("\nInvalid ID number")
     return
 
-def removeService():#TESTED
+def removeService():
     removing = None
 
     try:
@@ -883,7 +946,6 @@ def generateReports():
     else:
         print("Invalid input. No report generated.")
 
-
 def generateProviderSummaryReport(currentDate):
     for providerID, provider in providers.items():
         providerRecords = getProviderRecords(providerID, currentDate)
@@ -904,9 +966,7 @@ def generateProviderSummaryReport(currentDate):
 
             reportData += "\n" + "=" * 50 + "\n"
 
-            writeReportToFile(f"Provider_Summary_Report_{provider.number}", reportData)
-    
-
+            writeReportToFile(currentDate, f"Provider_Summary_Report_{provider.number}", reportData) 
 
 def generateMemberSummaryReport(currentDate):
     for memberID, member in members.items():
@@ -919,18 +979,17 @@ def generateMemberSummaryReport(currentDate):
             reportData += f"Member Address: {member.address}, {member.city}, {member.state} {member.zipCode}\n\n"
 
             for record in memberRecords:
-                provider_name = providers[record.providerID].name if record.providerID in providers else "Unknown Provider"
-                service_name = services[record.serviceCode].name if record.serviceCode in services else "Unknown Service"
+                providerName = providers[record.providerID].name if record.providerID in providers else "Unknown Provider"
+                serviceName = services[record.serviceCode].name if record.serviceCode in services else "Unknown Service"
 
                 reportData += f"Date of Service: {record.serviceDate}\n"
-                reportData += f"Provider Name: {provider_name}\n"
-                reportData += f"Service Name: {service_name}\n\n"
+                reportData += f"Provider Name: {providerName}\n"
+                reportData += f"Service Name: {serviceName}\n\n"
 
             reportData += "\n" + "=" * 50 + "\n"
 
             filename = f"Member_Summary_Report_{member.name}_{currentDate.strftime('%Y-%m-%d')}.txt"
-            writeReportToFile(filename, reportData)
-
+            writeReportToFile(currentDate, filename, reportData)
 
 def generateProviderEFTReport(currentDate):
     for providerID, provider in providers.items():
@@ -940,21 +999,19 @@ def generateProviderEFTReport(currentDate):
             reportData_header = f"Provider summary report generated for {provider.name} on {currentDate.strftime('%Y-%m-%d')}\n\n"
             totalAmount = sum(record.bill for record in providerRecords)
             reportData = f"Provider EFT report generated for {provider.name} on {currentDate.strftime('%Y-%m-%d')}\n"
-            reportData += f"Total Amount to be Transferred: ${totalAmount}\n\n"
+            reportData += f"Total Amount to be Transferred: ${totalAmount}\n"
             
-            writeReportToFile(f"Provider_EFT_Report_{provider.number}", reportData)
+            writeReportToFile(currentDate, f"Provider_EFT_Report_{provider.name}", reportData)
 
-
-def writeReportToFile(report_name, reportData):
-    reports_dir = "Records"
+def writeReportToFile(currentDate, reportName, reportData):
+    reports_dir = "Reports"
     os.makedirs(reports_dir, exist_ok=True)
 
-    reportFilename = f"{report_name}_{datetime.now().strftime('%Y%m%d%H%M%S')}.rec"
+    reportFilename = f"{reportName}_{currentDate.strftime('%Y_%m_%d_%H_%M_%S')}.txt"
     report_filepath = os.path.join(reports_dir, reportFilename)
 
     with open(report_filepath, "w") as report_file:
         report_file.write(reportData)
-
 
 def getProviderRecords(providerID, currentDate):
     # Filter records for the last week for a specific provider

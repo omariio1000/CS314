@@ -1,5 +1,9 @@
 
 def encrypt(phrase: str) -> str:
+    if not (all(c.isalpha() or c.isspace() for c in phrase) and phrase.islower):
+        print("\nPassword must be all lowercase letters or spaces, no numbers!")
+        raise ValueError
+
     keyword = getKeyWord()
     encrypted = ""
 
