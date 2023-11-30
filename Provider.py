@@ -6,13 +6,13 @@ class Provider(Member):
     def __init__(self, inName: str = None, inNumber: int = None, inAddress: str = None,
                  inCity: str = None, inState: str = None, inZip: int = None, inStatus: int = None):
         Member.__init__(self, inName, inNumber, inAddress, inCity, inState, inZip, inStatus)
-        self.service_codes = []  # List to store service codes
+        self.serviceCodes = []  # List to store service codes
 
     def writeServicesToFile(self, serviceDict):
         scriptDir = os.path.dirname(__file__)
         serviceDir = scriptDir + "/Services/"
 
-        for serviceCode in self.service_codes:
+        for serviceCode in self.serviceCodes:
             service = serviceDict.get(serviceCode)
             if service:
                 filename = f"{serviceCode:09d}.svc"
@@ -27,16 +27,16 @@ class Provider(Member):
                 print(f"Service with code {serviceCode} not found.")
 
     def addService(self, inServiceCode: int) -> bool:
-        if inServiceCode not in self.service_codes:
-            self.service_codes.append(inServiceCode)
+        if inServiceCode not in self.serviceCodes:
+            self.serviceCodes.append(inServiceCode)
             return True
         else:
             print("Already offering this service.")
             return False
 
     def removeService(self, inServiceCode: int) -> bool:
-        if inServiceCode in self.service_codes:
-            self.service_codes.remove(inServiceCode)
+        if inServiceCode in self.serviceCodes:
+            self.serviceCodes.remove(inServiceCode)
             return True
         else:
             print("The provider doesn't offer this service.")
@@ -50,4 +50,9 @@ class Provider(Member):
         print(f"City: {self.city}")
         print(f"State: {self.state}")
         print(f"Zip: {self.zipCode}")
-        print(f"Status: {self.status}")
+        print("Services offered: ", end='')
+        for service in self.serviceCodes:
+            print(f"{service:09d}", end=',')
+        print("")
+
+        return

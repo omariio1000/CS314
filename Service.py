@@ -50,4 +50,12 @@ class Service():
         self.cost = inCost
         return True
     
+    def display(self):
+        print("\Service Information:")
+        print(f"Name: {self.name}")
+        print(f"Service code: {self.code}")
+        print(f"Description: {self.desc}")
+        print(f"Cost: {self.cost:.2f}")
+
+        return
     

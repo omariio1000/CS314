@@ -21,7 +21,7 @@ def providerMode(provID: int):#TESTED
     running = True
     
     while (running):
-        print("Options:")
+        print("\nOptions:")
         print("1: Verify member ID")
         print("2: Print Records")
         print("3: Create a record")
@@ -29,7 +29,7 @@ def providerMode(provID: int):#TESTED
 
         choice = 0
         try:
-            choice = int(input("Select your mode: "))
+            choice = int(input("Select an option: "))
         except:
             print("\nOnly numeric characters allowed!")
 
@@ -44,7 +44,7 @@ def providerMode(provID: int):#TESTED
 
         elif (choice == 4):
             running = False
-            print("Logging out...")
+            print("\nLogging out...")
 
         else:
             print("\nInvalid option")
@@ -56,7 +56,7 @@ def verifyID():#TESTED
 
     if members.get(ID) is not None:
         print(f"\n{members[ID].name} status:")
-        if (members[ID].status == True):
+        if (members[ID].status == False):
             print("Suspended")
         else:
             print("Validated")
@@ -299,12 +299,222 @@ def addFiles():#TESTED
         newProvider = Provider(name, number, address, city, state, zip, status)
         serviceList = fileData[7].split(",")
         for service in serviceList:
-            # print("{:09d}".format(int(service)))
-            newProvider.addService(int(service))
+            if (service != ""):
+                # print("{:09d}".format(int(service)))
+                newProvider.addService(int(service))
         providers[number] = newProvider
     # print(providers)
     return
 
+def managerMode(userName: str):
+    print(f"\nWelcome to manager mode: {userName}")
+    running = True
+
+    while (running):
+        print("\nOptions:")
+        print("1: Edit member information")
+        print("2: Edit provider information")
+        print("3: Add a member")
+        print("4: Add a provider")
+        print("5: Remove a member")
+        print("6: Remove a provider")
+        print("7: Generate reports")
+        print("8: Log out")
+
+        choice = 0
+        try:
+            choice = int(input("Select an option: "))
+        except:
+            print("\nOnly numeric characters allowed!")
+
+        if (choice == 1):
+            editMember()
+        
+        elif (choice == 2):
+            editMember(True)
+        
+        elif (choice == 3):
+            return
+        
+        elif (choice == 4):
+            return
+        
+        elif (choice == 5):
+            return
+        
+        elif (choice == 6):
+            return
+        
+        elif (choice == 7):
+            return
+        
+        elif (choice == 8):
+            running = False
+            print("\nLogging out...")
+        
+        else:
+            print("\nInvalid option selected.")
+
+    return
+
+def writeMemberToFile(member: Member, oldId: int = -1):#TESTED
+    scriptDir = os.path.dirname(__file__)
+    memberDir = scriptDir + "/Members/"
+
+    if (oldId != -1):
+        oldFile = os.path.join(memberDir, f"{oldId:09d}.mem")
+        os.remove(oldFile)
+
+    # Create a filename based on the member number
+    filename = f"{member.number:09d}.mem"
+    filepath = os.path.join(memberDir, filename)
+
+    # Open the file for writing
+    with open(filepath, "w") as file:
+        # Write member data to the file
+        file.write(f"{member.name}\n")
+        file.write(f"{member.number:09d}\n")
+        file.write(f"{member.address}\n")
+        file.write(f"{member.city}\n")
+        file.write(f"{member.state}\n")
+        file.write(f"{member.zipCode}\n")
+        file.write(f"{int(member.status)}\n")
+
+    return
+
+def writeProviderToFile(provider: Provider, oldId: int = -1):#TESTED
+    scriptDir = os.path.dirname(__file__)
+    providerDir = scriptDir + "/Providers/"
+
+    if (oldId != -1):
+        oldFile = os.path.join(providerDir, f"{oldId:09d}.prov")
+        os.remove(oldFile)
+
+    # Create a filename based on the provider number
+    filename = f"{provider.number:09d}.prov"
+    filepath = os.path.join(providerDir, filename)
+
+    # Open the file for writing
+    with open(filepath, "w") as file:
+        # Write provider data to the file
+        file.write(f"{provider.name}\n")
+        file.write(f"{provider.number:09d}\n")
+        file.write(f"{provider.address}\n")
+        file.write(f"{provider.city}\n")
+        file.write(f"{provider.state}\n")
+        file.write(f"{provider.zipCode}\n")
+        file.write(f"{int(provider.status)}\n")
+        for service in provider.serviceCodes:
+            file.write(f"{service:09d},")
+
+    return
+
+def editMember(providerMode: bool = False):#TESTED
+    editing = None
+    
+    if (providerMode):
+        ID = int(input("\nEnter the ID of the provider: "))
+        editing = providers.get(ID)
+    else:
+        ID = int(input("\nEnter the ID of the member: "))
+        editing = members.get(ID)
+
+
+    if editing is not None:
+        editing.display()
+
+        print("\nOptions:")
+        print("1: Edit name")
+        if (not providerMode):
+            print("2: Edit member ID")
+        else:
+            print("2: Edit provider ID")
+        print("3: Edit address")
+        print("4: Edit city")
+        print("5: Edit state")
+        print("6: Edit zip code")
+        if (not providerMode):
+            print("7: Edit status")
+        else:
+            print("7: Add service to list")
+            print("8: Remove service from list")
+
+        choice = 0
+        try:
+            choice = int(input("Select an option: "))
+        except:
+            print("\nOnly numeric characters allowed!")
+
+        try:
+            if (choice == 1):
+                name = input("Please enter the new name: ")
+                editing.setName(name)
+
+            elif (choice == 2):
+                newID = int(input("Please enter in the new ID number: "))
+                editing.setNumber(newID)
+
+            elif (choice == 3):
+                address = input("Please enter in the new address: ")
+                editing.setAddr(address)
+
+            elif (choice == 4):
+                city = input("Please enter in the name of the new city: ")
+                editing.setCity(city)
+
+            elif (choice == 5):
+                state = input("Please enter in the name of the new state: ")
+                editing.setState(state)
+
+            elif (choice == 6):
+                zip = int(input("Please enter the new zip code: "))
+                editing.setZip(zip)
+            
+            elif (choice == 7 and not providerMode):
+                status = input("Enter \"Valid\" or \"Suspended\"")
+                if (status == "Valid"):
+                    editing.setStatus(True)
+                elif (status == "Suspended"):
+                    editing.setStatus(False)
+                else:
+                    print("\nInvalid status entered!")
+            
+            elif (choice == 7 or choice == 8 and providerMode):
+                serviceCode = 0
+                if choice == 7:
+                    serviceCode = int(input("Enter service code you'd like to add"))
+                else: 
+                    serviceCode = int(input("Enter service code you'd like to remove"))
+
+                service = services.get(serviceCode)
+
+                if (service is not None):
+                    if choice == 7:
+                        editing.addService(serviceCode)
+                    else:
+                        editing.removeService(serviceCode)
+                else:
+                    print("\nInvalid service code")
+
+            else:
+                print("\nInvalid option selected!")
+                return
+            
+            if (providerMode):
+                providers.pop(ID)
+                providers[editing.number] = editing
+                writeProviderToFile(editing, ID)
+            else:
+                members.pop(ID)
+                members[editing.number] = editing
+                writeMemberToFile(editing, ID)
+
+        except Exception as e:
+            print(f"Unable to edit due to ({e}) error")
+    else:
+        print("\nInvalid ID number")
+    
+    return
 
 def main():
     addFiles()
@@ -313,8 +523,7 @@ def main():
     print("Welcome to ChocAn!")
     running = True
     while (running):     
-        manager_mode = manager(providers, members, records)
-        print("Options:")
+        print("\nOptions:")
         print("1: Manager Mode")
         print("2: Provider Mode")
         print("3: Quit")
@@ -326,10 +535,24 @@ def main():
             print("\nOnly numeric characters allowed!")
 
         if (choice == 1):
-            manager_mode.welcome()
+            user = input("Enter your username: ")
+            password = input("Enter your password: ")
+
+            try:
+                if (managerPasses[user] == encrypt(password)):
+                    # manager(providers, members, records).welcome()
+                    managerMode(user)
+                else:
+                    print("\nIncorrect password!")
+            except:
+                print("\nIncorrect username!")
 
         elif (choice == 2):
-            provNum = int(input("\nEnter your provider ID: "))
+            provNum = 0
+            try:
+                provNum = int(input("\nEnter your provider ID: "))
+            except:
+                print("\nOnly numeric characters allowed!")
             provPass = input("Enter your password: ")
 
             try:
@@ -337,8 +560,8 @@ def main():
                     providerMode(provNum)
                 
                 else:
-                    print("Password is incorrect!")
-            except KeyError:
+                    print("\nIncorrect password!")
+            except:
                 print("\nNo provider with that ID found!")
 
         elif (choice == 3):

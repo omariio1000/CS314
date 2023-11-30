@@ -86,3 +86,18 @@ class Member():
             raise TypeError
         self.status = inStatus
         return
+    
+    def display(self):
+        print("\nMember Information:")
+        print(f"Name: {self.name}")
+        print(f"Number: {self.number}")
+        print(f"Address: {self.address}")
+        print(f"City: {self.city}")
+        print(f"State: {self.state}")
+        print(f"Zip: {self.zipCode}")
+        if (self.status == False):
+            print("Status: Suspended")
+        else:
+            print("Status: Validated")
+
+        return

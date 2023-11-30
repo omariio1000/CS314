@@ -125,7 +125,7 @@ class manager:
         with open(filepath, "w") as file:
             # Write member data to the file
             file.write(f"{member.name}\n")
-            file.write(f"{member.number}\n")
+            file.write(f"{member.number:09d}\n")
             file.write(f"{member.address}\n")
             file.write(f"{member.city}\n")
             file.write(f"{member.state}\n")
@@ -421,7 +421,7 @@ class manager:
         reports_dir = "Records"
         os.makedirs(reports_dir, exist_ok=True)
 
-        report_filename = f"{report_name}_{datetime.now().strftime('%Y%m%d%H%M%S')}.txt"
+        report_filename = f"{report_name}_{datetime.now().strftime('%Y%m%d%H%M%S')}.rec"
         report_filepath = os.path.join(reports_dir, report_filename)
 
         with open(report_filepath, "w") as report_file:
