@@ -202,7 +202,7 @@ class Terminal():
         passDir = scriptDir + "/Passwords/"
         
         managerFile = os.path.join(passDir, "managers.pass")
-        providerFile = os.path.join(passDir, "self.providers.pass")
+        providerFile = os.path.join(passDir, "providers.pass")
     
         os.remove(managerFile)
         os.remove(providerFile)
@@ -219,17 +219,18 @@ class Terminal():
         newUser = True
         if (self.managerPasses.get(user) is not None):
             newUser = False
-            affirm = input("\nWould you like to view your current password? (y/n): ")
+            affirm = input(f"\nWould you like to view the current password for \"{user}\"? (y/n): ")
             if (affirm == 'y'):
-                print(f"Current password for user ({user}): \"" + decrypt(self.managerPasses.get(user)) + "\"")
+                print(f"Current password for \"{user}\": \"" + decrypt(self.managerPasses.get(user)) + "\"")
         
         password = input("Enter your new password (0 to cancel): ")
         try:
-            self.managerPasses[user] = encrypt(password)
+            password = encrypt(password)
+            self.managerPasses[user] = password
             if (newUser):
-                print("\nUser added successfully!")
+                print(f"\nAdmin \"{user}\" added successfully!")
             else:
-                print("\nPassword set successfully!")
+                print(f"\nPassword for \"{user}\" changed successfully!")
         except Exception as e:
                 print(f"\bUnable to edit due to error ({e})")
 
