@@ -1,6 +1,7 @@
 #Record class (to write to disk)
 
 from datetime import datetime
+from typing import Union
 class Record():
     def __init__(self, inTime: datetime = None, inServiceDate: datetime = None, inProv: int = None, 
                  inMem: int = None, inServ: int = None, inBill: float = None, inComments: str = None):
@@ -87,7 +88,11 @@ class Record():
         self.bill = inBill
         return True
 
-    def setComments(self, inComments: str) -> bool:
+    def setComments(self, inComments: Union[str, None]) -> bool:
+        if (inComments == None):
+             self.comments = None
+             return True
+        
         if (len(inComments) > 100):
             print("Max length of comments is 100!")
             return False
@@ -95,3 +100,17 @@ class Record():
         self.comments = inComments
         return True
     
+    def display(self):
+        serviceDate = self.serviceDate.strftime("%Y-%m-%d")
+        print(f"\nRecord Creation Time: {self.currentTime}")
+        print(f"Service Date: {serviceDate}")
+        print(f"Provider ID: {self.providerID:09d}")
+        print(f"Member ID: {self.memberID:09d}")
+        print(f"Service Code: {self.serviceCode:09d}")
+        print(f"Bill: {self.bill:.2f}")
+        if (self.comments != None):
+            print(f"Comments: {self.comments}")
+        else:
+            print("No comments provided.")
+
+        return

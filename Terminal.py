@@ -40,7 +40,7 @@ class Terminal():
                 print("\nOnly numeric characters allowed!")
 
             if (choice == 1):
-                user = input("Enter your username: ")
+                user = input("\nEnter your username: ")
                 password = input("Enter your password: ")
 
                 try:
@@ -115,7 +115,7 @@ class Terminal():
             else:
                 print("\nInvalid option")
 
-            return
+        return
 
     def verifyID(self):
         ID = int(input("\nEnter the ID of the member: "))
@@ -132,46 +132,64 @@ class Terminal():
     def printRecords(self, provID: int):
         print("\n" + "-" * 100)
 
+        found = False
         for key in self.records:
             if key.providerID == provID:
-                serviceDate = key.serviceDate.strftime("%Y-%m-%d")
-                print(f"Record Creation Time: {key.currentTime}")
-                print(f"Service Date: {serviceDate}")
-                print(f"Provider ID: {key.providerID:09d}")
-                print(f"Member ID: {key.memberID:09d}")
-                print(f"Service Code: {key.serviceCode:09d}")
-                print(f"Bill: {key.bill:.2f}")
-                if (key.comments != None):
-                    print(f"Comments: {key.comments}")
-                else:
-                    print("No comments provided")
-                print("-" * 100)
-            else:
-                print("\nNo self.records found for the given provider ID.")
-
-    def writeRecordToFile(self, record):
-            scriptDir = os.path.dirname(__file__)
-            recordDir = scriptDir + "/Records/"
-
-            # Create a filename based on the timestamp
-            filename = f"{record.currentTime.strftime('%Y_%m_%d_%H_%M_%S')}.rec"
-            filepath = os.path.join(recordDir, filename)
-
-            # Open the file for writing
-            with open(filepath, "w") as file:
-                # Write record data to the file
-                file.write(f"{record.serviceDate.strftime('%Y_%m_%d')}\n")
-                file.write(f"{record.providerID:09d}\n")
-                file.write(f"{record.memberID:09d}\n")
-                file.write(f"{record.serviceCode:09d}\n")
-                file.write(f"{record.bill:.2f}\n")
-
-                if (record.comments is not None):
-                    file.write(f"{record.comments}\n")
+                found = True
+                key.display()
+                print("\n" + "-" * 100)
         
-    def createRecords(self, provID: int):
+        if not found:
+            print("\nNo Records found for the given provider ID.")
+
+    def removeRecordFile(self, time: str):
+        scriptDir = os.path.dirname(__file__)
+        recordDir = scriptDir + "/Records/"
+
+        filename = f"{time}.rec"
+        filepath = os.path.join(recordDir, filename)
+
+        # Remove the file if it exists
+        if os.path.exists(filepath):
+            os.remove(filepath)
+            print(f"\nCorresponding .rec file ({filename}) removed.")
+        else:
+            print(f"\nCorresponding .rec file not found: {filename}")
+
+    def writeRecordToFile(self, record: Record, oldTime: str = ""):
+        scriptDir = os.path.dirname(__file__)
+        recordDir = scriptDir + "/Records/"
+
+        # Create a filename based on the timestamp
+        filename = f"{record.currentTime.strftime('%Y_%m_%d_%H_%M_%S')}.rec"
+        filepath = os.path.join(recordDir, filename)
+
+        if (oldTime != ""):
+            self.removeRecordFile(oldTime)
+
+        # Open the file for writing
+        with open(filepath, "w") as file:
+            # Write record data to the file
+            file.write(f"{record.serviceDate.strftime('%Y_%m_%d')}\n")
+            file.write(f"{record.providerID:09d}\n")
+            file.write(f"{record.memberID:09d}\n")
+            file.write(f"{record.serviceCode:09d}\n")
+            file.write(f"{record.bill:.2f}\n")
+
+            if (record.comments is not None):
+                file.write(f"{record.comments}\n")
+
+            print(f"\nCorresponding .rec file created: {filename}")
+        
+    def createRecords(self, provID: int = -1):
         print("\nYou're creating a record, please follow instructions below")
+                
         try:
+            if (provID == -1):
+                provID = int(input("Enter a provider ID: "))
+                if (self.providers.get(provID) is None):
+                    raise ValueError
+
             serviceDate = datetime.strptime(str(input("Enter Service Date (YYYY/MM/DD): ")), '%Y/%m/%d')
 
             memberId = int(input("Enter Member ID: "))
@@ -196,6 +214,112 @@ class Terminal():
             self.writeRecordToFile(newRecord)
         except Exception as e:
             print(f"An error ({e}) has occured.\nRecord will not be created.")
+
+    def editRecord(self):
+        try:
+            dateIn = input("\nEnter the date/time record was created (YYYY/MM/DD HH:MM:SS): ")
+            recordDate = datetime.strptime(dateIn, "%Y/%m/%d %H:%M:%S")
+            found = False
+
+            for record in self.records:
+                if (recordDate == record.currentTime ):
+                    found = True
+                    record.display()
+
+                    print("\nOptions:")
+                    print("1: Edit creation time")
+                    print("2: Edit service date")
+                    print("3: Edit provider ID")
+                    print("4: Edit member ID")
+                    print("5: Edit service code (changes bill)")
+                    print("6: Edit bill (overrides service cost)")
+                    print("7: Edit comments")
+
+                    choice = int(input("Select an option: "))
+
+                    if (choice == 1):
+                        timeStr = input("\nEnter new date & time (YYYY/MM/DD HH:MM:SS): ")
+                        time = datetime.strptime(timeStr, "%Y/%m/%d %H:%M:%S")
+                        record.setTime(time)
+                    elif (choice == 2):
+                        dateStr = input("\nEnter new date (YYYY/MM/DD): ")
+                        date = datetime.strptime(dateStr, "%Y/%m/%d")
+                        record.setDate(date)
+                    elif (choice == 3):
+                        provID = int(input("\nEnter new provider ID: "))
+                        if (self.providers.get(provID) is not None):
+                            record.setProv(provID)
+                        else:
+                            print("\nThat provider doesn't exist!")
+                            return
+                    elif (choice == 4):
+                        memberID = int(input("\nEnter new member ID: "))
+                        if (self.members.get(memberID) is not None):
+                            record.setMem(memberID)
+                        else:
+                            print("\nThat member doesn't exist!")
+                            return                   
+                    elif (choice == 5):
+                        serviceCode = int(input("\nEnter new service code: "))
+                        if (self.services.get(serviceCode) is not None):
+                            record.setMem(serviceCode)
+                            record.setBill(self.services[serviceCode].cost)
+                        else:
+                            print("\nThat service doesn't exist!")
+                            return   
+                    elif (choice == 6):
+                        bill = float(input("\nEnter new bill: "))
+                        record.setBill(bill)
+                    elif (choice == 7):
+                        comments = input("\nEnter new comments (enter for none): ")
+                        if (comments == ""):
+                            comments = None
+                        record.setComments(comments)
+                    else:
+                        print("\nInvalid option selected!")
+                        return
+
+                    oldTime = datetime.strftime(recordDate, "%Y_%m_%d_%H_%M_%S")
+                    self.writeRecordToFile(record, oldTime)
+
+            if (found != True):
+                print("\nNo record found for that time!")
+
+        except Exception as e:
+            print(f"An error ({e}) has occured.\nRecord will not be edited.")
+        
+        return
+
+    def removeRecord(self):
+        try:
+            dateIn = input("\nEnter the date/time record was created (YYYY/MM/DD HH:MM:SS): ")
+            recordDate = datetime.strptime(dateIn, "%Y/%m/%d %H:%M:%S")
+            found = False
+
+            for record in self.records:
+                if (recordDate == record.currentTime ):
+                    found = True
+                    record.display()
+
+                    affirm = input("Are you sure you would like to remove? (y/n): ")
+                    if (affirm == 'y'):
+                        self.records.remove(record)
+                        time = datetime.strftime(recordDate, "%Y_%m_%d_%H_%M_%S")
+                        self.removeRecordFile(time)
+
+                    elif (affirm == "n"):
+                        print("\nNot removed.")
+                    else:
+                        print("\nInvalid Input. Not removed.")                  
+
+            if (found != True):
+                print("\nNo record found for that time!")
+
+        except Exception as e:
+            print(f"An error ({e}) has occured.\nRecord will not be edited.")
+
+
+        return
 
     def updatePasswords(self):
         scriptDir = os.path.dirname(__file__)
@@ -273,13 +397,17 @@ class Terminal():
             print(" 8: Edit service")
             print(" 9: Remove service")
 
-            print("10: Generate reports")
+            print("10: Add record")
+            print("11: Edit record")
+            print("12: Remove record")
 
-            print("11: Change your password")
-            print("12: Change provider password")
-            print("13: Add new admin user")
+            print("13: Generate reports")
 
-            print("14: Log out")
+            print("14: Change your password")
+            print("15: Change provider password")
+            print("16: Add new admin user")
+
+            print("17: Log out")
 
             choice = 0
             try:
@@ -315,12 +443,21 @@ class Terminal():
                 self.removeService()
 
             elif (choice == 10):
-                self.generateReports()
+                self.createRecords()
 
             elif (choice == 11):
-                self.updateAdminPassword(userName)
+                self.editRecord()
 
             elif (choice == 12):
+                self.removeRecord()
+
+            elif (choice == 13):
+                self.generateReports()
+
+            elif (choice == 14):
+                self.updateAdminPassword(userName)
+
+            elif (choice == 15):
                 try:
                     provID = int(input("\nEnter a provider ID: "))
                     if (self.providers.get(provID) is not None):
@@ -330,14 +467,14 @@ class Terminal():
                 except Exception as e:
                     print(f"Unable to change password due to error ({e})")
             
-            elif (choice == 13):
+            elif (choice == 16):
                 user = input("\nEnter a new username: ")
                 if (self.managerPasses.get(user) is None):
                     self.updateAdminPassword(user)
                 else:
                     print("Already have an admin with that username!")
 
-            elif (choice == 14):
+            elif (choice == 17):
                 running = False
                 print("\nLogging out...")
             
