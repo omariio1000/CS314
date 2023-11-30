@@ -156,6 +156,25 @@ def getPasses():#TESTED
     
     return
 
+def updatePasswords():
+    scriptDir = os.path.dirname(__file__)
+    passDir = scriptDir + "/Passwords/"
+    
+    managerFile = os.path.join(passDir, "managers.pass")
+    providerFile = os.path.join(passDir, "providers.pass")
+   
+    os.remove(managerFile)
+    os.remove(providerFile)
+
+    with open(managerFile, "w") as file:
+        for user, password in managerPasses.items():
+            file.write(f"{user}:{password}\n")
+    
+    with open(providerFile, "w") as file:
+        for user, password in providerPasses.items():
+            file.write(f"{user:09d}:{password}\n")
+
+
 def addFiles():#TESTED
     scriptDir = os.path.dirname(__file__)  # absolute dir
     recordDir = scriptDir + "/Records/"
@@ -497,80 +516,85 @@ def editMember(providerMode: bool = False):#TESTED
         except:
             print("\nOnly numeric characters allowed!")
 
-        try:
-            if (choice == 1):
-                name = input("Please enter the new name: ")
-                editing.setName(name)
+        # try:
+        if (choice == 1):
+            name = input("Please enter the new name: ")
+            editing.setName(name)
 
-            elif (choice == 2):
-                newID = int(input("Please enter in the new ID number: "))
+        elif (choice == 2):
+            newID = int(input("Please enter in the new ID number: "))
 
-                if (providerMode and providers.get(newID is not None)):
-                    print("\nAnother provider has this ID!")
-                    raise ValueError
-                elif (members.get(newID) is not None):
-                    print("\nAnother member has this ID!")
-                    raise ValueError
+            if (providerMode and providers.get(newID) is not None):
+                print("\nAnother provider has this ID!")
+                raise ValueError
+            elif (not providerMode and members.get(newID) is not None):
+                print("\nAnother member has this ID!")
+                raise ValueError
 
-                editing.setNumber(newID)
+            editing.setNumber(newID)
 
-            elif (choice == 3):
-                address = input("Please enter in the new address: ")
-                editing.setAddr(address)
+        elif (choice == 3):
+            address = input("Please enter in the new address: ")
+            editing.setAddr(address)
 
-            elif (choice == 4):
-                city = input("Please enter in the name of the new city: ")
-                editing.setCity(city)
+        elif (choice == 4):
+            city = input("Please enter in the name of the new city: ")
+            editing.setCity(city)
 
-            elif (choice == 5):
-                state = input("Please enter in the name of the new state: ")
-                editing.setState(state)
+        elif (choice == 5):
+            state = input("Please enter in the name of the new state: ")
+            editing.setState(state)
 
-            elif (choice == 6):
-                zip = int(input("Please enter the new zip code: "))
-                editing.setZip(zip)
-            
-            elif (choice == 7 and not providerMode):
-                status = input("Enter \"Valid\" or \"Suspended\": ")
-                if (status == "Valid"):
-                    editing.setStatus(True)
-                elif (status == "Suspended"):
-                    editing.setStatus(False)
-                else:
-                    print("\nInvalid status entered!")
-            
-            elif (choice == 7 or choice == 8 and providerMode):
-                serviceCode = 0
+        elif (choice == 6):
+            zip = int(input("Please enter the new zip code: "))
+            editing.setZip(zip)
+        
+        elif (choice == 7 and not providerMode):
+            status = input("Enter \"Valid\" or \"Suspended\": ")
+            if (status == "Valid"):
+                editing.setStatus(True)
+            elif (status == "Suspended"):
+                editing.setStatus(False)
+            else:
+                print("\nInvalid status entered!")
+        
+        elif (choice == 7 or choice == 8 and providerMode):
+            serviceCode = 0
+            if choice == 7:
+                serviceCode = int(input("Enter service code you'd like to add: "))
+            else: 
+                serviceCode = int(input("Enter service code you'd like to remove: "))
+
+            service = services.get(serviceCode)
+
+            if (service is not None):
                 if choice == 7:
-                    serviceCode = int(input("Enter service code you'd like to add: "))
-                else: 
-                    serviceCode = int(input("Enter service code you'd like to remove: "))
-
-                service = services.get(serviceCode)
-
-                if (service is not None):
-                    if choice == 7:
-                        editing.addService(serviceCode)
-                    else:
-                        editing.removeService(serviceCode)
+                    editing.addService(serviceCode)
                 else:
-                    print("\nInvalid service code")
-
+                    editing.removeService(serviceCode)
             else:
-                print("\nInvalid option selected!")
-                return
-            
-            if (providerMode):
-                providers.pop(ID)
-                providers[editing.number] = editing
-                writeProviderToFile(editing, ID)
-            else:
-                members.pop(ID)
-                members[editing.number] = editing
-                writeMemberToFile(editing, ID)
+                print("\nInvalid service code")
 
-        except Exception as e:
-            print(f"Unable to edit due to error ({e})")
+        else:
+            print("\nInvalid option selected!")
+            return
+        
+        if (providerMode):
+            providers.pop(ID)
+            providers[editing.number] = editing
+            writeProviderToFile(editing, ID)
+
+            temp = providerPasses[ID]
+            providerPasses.pop(ID)
+            providerPasses[editing.number] = temp
+            updatePasswords()
+        else:
+            members.pop(ID)
+            members[editing.number] = editing
+            writeMemberToFile(editing, ID)
+
+        # except Exception as e:
+        #     print(f"Unable to edit due to error ({e})")
     else:
         print("\nInvalid ID number")
     
@@ -634,6 +658,9 @@ def addMember(providerMode: bool = False):#TESTED
                 if (providers.get(adding.number) is None):
                     providers[adding.number] = adding
                     writeProviderToFile(adding)
+
+                    providerPasses[adding.number] = encrypt("password")
+                    updatePasswords()
                 else:
                     print("Provider with this ID already exists!")
             else:
@@ -668,6 +695,9 @@ def removeMember(providerMode: bool = False):#TESTED
                 if(providerMode):
                     providers.pop(ID)
                     removeProviderFile(ID)
+
+                    providerPasses.pop(ID)
+                    updatePasswords()
                 else:
                     members.pop(ID)
                     removeMemberFile(ID)
