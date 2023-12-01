@@ -22,7 +22,8 @@ def test_addService_incorrect_repeat():
     test = Provider()
     assert test.addService(5) == True
     assert test.serviceCodes.__contains__(5) == True
-    assert test.addService(5) == False
+    with pytest.raises(ValueError):
+        assert test.addService(5)
 
 
 def test_removeService_positive():
@@ -40,4 +41,5 @@ def test_removeService_incorrect():
 def test_removeService_incorrect_not_in_list():
     test = Provider()
     assert test.serviceCodes.__contains__(1) == False
-    assert test.removeService(1) == False
+    with pytest.raises(ValueError):
+        assert test.removeService(1)

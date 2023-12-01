@@ -129,22 +129,27 @@ def test_setters_date_incorrect_value():
 
 def test_setters_provider_incorrect_value():
     test = Record()
-    assert test.setProv(1000000000) == False
+    with pytest.raises(ValueError):
+        assert test.setProv(1000000000)
 
 def test_setters_memberID_incorrect_value():
     test = Record()
-    assert test.setMem(1000000000) == False
+    with pytest.raises(ValueError):
+        assert test.setMem(1000000000)
 
 def test_setters_serviceCode_incorrect_value():
     test = Record()
-    assert test.setCode(1000000000) == False
+    with pytest.raises(ValueError):
+        assert test.setCode(1000000000)
 
 def test_setters_bill_incorrect_value():
     test = Record()
-    assert test.setBill(2999.9) == False
+    with pytest.raises(ValueError):
+        assert test.setBill(2999.9)
 
 def test_setters_comments_incorrect_value():
     test = Record()
-    assert test.setComments("A" * 200) == False
+    with pytest.raises(ValueError):
+        assert test.setComments("A" * 200)
 
 

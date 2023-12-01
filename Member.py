@@ -50,7 +50,7 @@ class Member():
     def setAddr(self, inAddr: str) -> bool:
         if (len(inAddr) > 25):
             print("Address must be <= 25 characters!")
-            return False
+            raise ValueError
 
         self.address = inAddr
         return True
@@ -59,7 +59,7 @@ class Member():
     def setCity(self, inCity: str) -> bool:
         if (len(inCity) > 14):
             print("City must be <= 14 characters!")
-            return False
+            raise ValueError
         self.city = inCity
         return True
 
