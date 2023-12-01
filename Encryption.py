@@ -29,7 +29,7 @@ def decrypt(phrase: str) -> str:
     keyword = getKeyWord()
     decrypted = ""
 
-    counter = 0;
+    counter = 0
     for i in range(len(phrase)):
         shift = keyword[counter % len(keyword)] - 97
         temp = phrase[i]
