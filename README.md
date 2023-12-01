@@ -2,6 +2,14 @@
 
 ## Manager Mode
 
+### Users and Passwords
+
+Default manager usernames and passwords:
+  * admin: "admin"
+  * manager: "manager"
+
+New admin users can be created in admin mode, and passwords can be changed.
+
 ### Functions
 
 **Add/Edit/Remove Member**
@@ -41,15 +49,10 @@ Add a new admin and set their password.
 
 Change the password for any provider. Allows user to view the password before deciding whether or not to change it.
 
-### Users and Passwords
-
-Default admin users and passwords:
-  * admin: "admin"
-  * manager: "manager"
-
-New admin users can be created in admin mode, and passwords can be changed.
-
 ## Provider Mode
+
+### Default Passwords
+All newly created providers have default password of "password". These can be changed by an admin or a provider.
 
 ### Functions
 
@@ -72,9 +75,6 @@ Display a list of services offered and their descriptions, codes, and cost.
 **Change  password**
 
 Change provider password. Allows provider to view it before defciding whether or not to change it.
-
-### Default Passwords
-All newly created providers have default password of "password". These can be changed by an admin or a provider.
 
 ## File Formatting
 Files are created by the program automatically, but in case of fixing corrupted files, the format is provided here.
