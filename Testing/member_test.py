@@ -108,27 +108,33 @@ def test_setters_status_incorrect():
 
 def test_setters_name_incorrect_value():
     test = Member()
-    assert test.setName("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == False
+    with pytest.raises(ValueError):
+        assert test.setName("A" * 26)
 
 def test_setters_number_incorrect_value():
     test = Member()
-    assert test.setNumber(1000000000) == False
+    with pytest.raises(ValueError):
+        assert test.setNumber(1000000000)
 
 def test_setters_address_incorrect_value():
     test = Member()
-    assert test.setAddr("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == False
+    with pytest.raises(ValueError):
+        assert test.setAddr("A" * 26)
 
 def test_setters_city_incorrect_value():
     test = Member()
-    assert test.setCity("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA") == False
+    with pytest.raises(ValueError):
+        assert test.setCity("A" * 26)
 
 def test_setters_state_incorrect_value():
     test = Member()
-    assert test.setState("AAA") == False
+    with pytest.raises(ValueError):
+        assert test.setState("AAA")
 
 def test_setters_zip_code_incorrect_value():
    test = Member()
-   assert test.setZip(1000000000) == False
+   with pytest.raises(ValueError):
+    assert test.setZip(1000000000)
 
 def test_setters_status_incorrect_value():
     test = Member()

@@ -1,7 +1,7 @@
 #Record class (to write to disk)
 
 from datetime import datetime
-import os
+from typing import Union
 class Record():
     def __init__(self, inTime: datetime = None, inServiceDate: datetime = None, inProv: int = None, 
                  inMem: int = None, inServ: int = None, inBill: float = None, inComments: str = None):
@@ -14,8 +14,8 @@ class Record():
         self.bill = None
         self.comments = None
 
-        if (inTime == None or inServiceDate == None or inProv == None or inMem == None
-            or inServ == None or inBill == None):
+        if (inServiceDate == None and inProv == None and inMem == None
+            and inServ == None and inBill == None):
                 return
 
         ret = True
@@ -35,7 +35,7 @@ class Record():
 
     def setTime(self, inTime: datetime = None) -> None:
         if (inTime == None):
-            self.currentTime = datetime.datetime.now()
+            self.currentTime = datetime.now()
             return
         elif not isinstance(inTime, datetime):
                   raise TypeError
@@ -46,7 +46,7 @@ class Record():
     def setDate(self, inDate: datetime) -> bool:
         if (inDate == None):
             print("Invalid date!")
-            return False
+            raise ValueError
         elif not isinstance(inDate, datetime):
                   raise TypeError
         
@@ -56,7 +56,7 @@ class Record():
     def setProv(self, inProv: int) -> bool:
         if (0 > inProv or inProv > 999999999):
             print("Provider ID must be 9 digits long!")
-            return False
+            raise ValueError
         
         self.providerID = inProv
         return True
@@ -64,7 +64,7 @@ class Record():
     def setMem(self, inMem: int) -> bool:
         if (0 > inMem or inMem > 999999999):
             print("Member ID must be 9 digits long!")
-            return False
+            raise ValueError
         
         self.memberID = inMem
         return True
@@ -72,7 +72,7 @@ class Record():
     def setCode(self, inCode: int) -> bool:
         if (0 > inCode or inCode > 999999999):
             print("Service code must be 9 digits long!")
-            return False
+            raise ValueError
         
         self.serviceCode = inCode
         return True
@@ -80,19 +80,37 @@ class Record():
     def setBill(self, inBill: float) -> bool:
         if (0 > inBill or inBill > 999.99):
             print("Can't charge them that much!")
-            return False
+            raise ValueError
         elif (inBill < 0):
             print("You can't pay them!")
-            return False
+            raise ValueError
         
         self.bill = inBill
         return True
 
-    def setComments(self, inComments: str) -> bool:
+    def setComments(self, inComments: Union[str, None]) -> bool:
+        if (inComments == None):
+             self.comments = None
+             return True
+        
         if (len(inComments) > 100):
             print("Max length of comments is 100!")
-            return False
+            raise ValueError
         
         self.comments = inComments
         return True
     
+    def display(self):
+        serviceDate = self.serviceDate.strftime("%Y-%m-%d")
+        print(f"\nRecord Creation Time: {self.currentTime}")
+        print(f"Service Date: {serviceDate}")
+        print(f"Provider ID: {self.providerID:09d}")
+        print(f"Member ID: {self.memberID:09d}")
+        print(f"Service Code: {self.serviceCode:09d}")
+        print(f"Bill: {self.bill:.2f}")
+        if (self.comments != None):
+            print(f"Comments: {self.comments}")
+        else:
+            print("No comments provided.")
+
+        return

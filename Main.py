@@ -2,9 +2,9 @@ from Member import Member
 from Provider import Provider
 from Service import Service
 from Record import Record
-from Manager import manager
+from Terminal import Terminal
 from datetime import datetime
-from Manager import manager
+from Encryption import *
 import os
 
 records = []
@@ -12,108 +12,8 @@ services = dict()
 members = dict()
 providers = dict()
 
-
-def providerMode():
-    print("\nWelcome to provider mode.")
-    print("\n1. Verify member id")
-    print("\n2. Print Records")
-    print("\n3. Create a Record")
-
-    choice = int(input("\nSelect your decision: "))
-
-    if (choice == 1):
-        verifyID()
-
-    if (choice == 2):
-        provID = int(input("\nWhat is your provider ID: "))
-        printRecords(provID)
-
-    if (choice == 3):
-        createRecords()
-
-    else:
-        print("\nPlease enter 1, 2, or 3!")
-
-    return
-
-
-def verifyID():
-    ID = int(input("\nEnter the ID of the member: "))
-
-    if members.get(ID) is not None:
-        if (members[ID].status == True):
-            print("\nSuspended")
-        else:
-            print("\nValidated")
-    else:
-        print("\nInvalid ID number")
-
-
-def printRecords(provID):
-
-    for key in records:
-        if key.providerID == provID:
-            print("-" * 100)
-            print(f"Current: {key.currentTime},")
-            print(f"Service Date: {key.serviceDate},")
-            print(f"Provider ID: {key.providerID},")
-            print(f"Member ID: {key.memberID},")
-            print(f"Service Code: {key.serviceCode},")
-            print(f"Bill: {key.bill},")
-            print(f"Comments: {key.comments}")
-            print("-" * 100)
-        else:
-            print("\nNo records found for the given provider ID.")
-
-def writeRecordToFile(record):
-        scriptDir = os.path.dirname(__file__)
-        recordDir = scriptDir + "/Records/"
-
-        # Create a filename based on the timestamp
-        filename = f"{record.currentTime.strftime('%Y_%m_%d_%H_%M_%S')}.txt"
-        filepath = os.path.join(recordDir, filename)
-
-        # Open the file for writing
-        with open(filepath, "w") as file:
-            # Write record data to the file
-            file.write(f"{record.serviceDate.strftime('%Y_%m_%d')}\n")
-            file.write(f"{record.providerID}\n")
-            file.write(f"{record.memberID}\n")
-            file.write(f"{record.serviceCode}\n")
-            file.write(f"{record.bill}\n")
-            file.write(f"{record.comments}\n")
-    
-def createRecords():
-
-   # Layaal please make this write to a file, if you need help just let me know on discord - Abdirizak
-    print("You're creating a record, please follow instructions below")
-    try:
-        time_input = input(
-            "Enter Current Time (YYYY/MM/DD/HH/MM/SS) or 'now' for current time: ")
-
-        if time_input.lower() == 'now':
-            currentTime = datetime.now()
-        else:
-            try:
-                currentTime = datetime.strptime(
-                    time_input, "%Y/%m/%d/%H/%M/%S")
-            except ValueError:
-                print("Incorrect time format. Record will not be created.")
-                return
-
-        serviceDate = str(input("Enter Service Date (YYYY/MM/DD): "))
-        providerId = int(input("Enter Provider ID: "))
-        memberId = int(input("Enter Member ID: "))
-        serviceCode = int(input("Enter Service Code: "))
-        bill = float(input("Enter bill: "))
-        comments = str(input("Enter any comments please: "))
-        newRecord = Record(currentTime, serviceDate, providerId,
-                           memberId, serviceCode, bill, comments)
-        records.append(newRecord)
-        writeRecordToFile(newRecord)
-    except ValueError:
-        print("An error has occured Record will not be created.")
-
+managerPasses = dict()
+providerPasses = dict()
 
 def addFiles():
     scriptDir = os.path.dirname(__file__)  # absolute dir
@@ -144,11 +44,11 @@ def addFiles():
         serviceDate = datetime.strptime(fileData[0], '%Y_%m_%d')
         # print(serviceDate)
         providerId = int(fileData[1])
-        # print("{:06d}".format(providerId))
+        # print("{:09d}".format(providerId))
         memberId = int(fileData[2])
-        # print("{:06d}".format(memberId))
+        # print("{:09d}".format(memberId))
         serviceCode = int(fileData[3])
-        # print("{:06d}".format(serviceCode))
+        # print("{:09d}".format(serviceCode))
         bill = float(fileData[4])
         # print("{:.2f}".format(bill))
         comments = ""
@@ -159,7 +59,7 @@ def addFiles():
             comments = None
 
         newRecord = Record(currentTime, serviceDate, providerId,
-                           memberId, serviceCode, bill, comments)
+                        memberId, serviceCode, bill, comments)
         records.append(newRecord)
 
     for extService in extServices:
@@ -175,7 +75,7 @@ def addFiles():
             count += 1
 
         code = int(fileData[0])
-        # print("{:06d}".format(code))
+        # print("{:09d}".format(code))
         name = fileData[1]
         # print(name)
         desc = fileData[2]
@@ -202,7 +102,7 @@ def addFiles():
         name = fileData[0]
         # print(name)
         number = int(fileData[1])
-        # print("{:06d}".format(number))
+        # print("{:09d}".format(number))
         address = fileData[2]
         # print(address)
         city = fileData[3]
@@ -238,7 +138,7 @@ def addFiles():
         name = fileData[0]
         # print(name)
         number = int(fileData[1])
-        # print("{:06d}".format(number))
+        # print("{:09d}".format(number))
         address = fileData[2]
         # print(address)
         city = fileData[3]
@@ -256,65 +156,53 @@ def addFiles():
         newProvider = Provider(name, number, address, city, state, zip, status)
         serviceList = fileData[7].split(",")
         for service in serviceList:
-            # print("{:06d}".format(int(service)))
-            newProvider.addService(int(service))
+            if (service != ""):
+                # print("{:09d}".format(int(service)))
+                newProvider.addService(int(service))
         providers[number] = newProvider
     # print(providers)
     return
 
+def getPasses():
+    scriptDir = os.path.dirname(__file__)
+    passDir = scriptDir + "/Passwords/"
 
-def main():
-    addFiles()
+    managerFile = open(passDir + "managers.pass", "r")
+    providerFile = open(passDir + "providers.pass", "r")
 
-    '''
-    TO-DO LIST:
-        File reading stuff - DONE
-        Manager mode - DONE
-        Provider mode - DONE
-        Unit testing - DONE
+    managerData = managerFile.readlines()
+    providerData = providerFile.readlines()
 
-        Other file handling stuff - Layaal
-            Writing services to directory
-            Writing members to directory
-            Writing providers to directory
-            Writing records to directory
-            Records/EFT stuff to directories:
-                Provider summary report
-                Member summary report
-                Provider EFT
-                Member EFT
+    for data in managerData:
+        if (data[-1] == '\n'):
+            data = data[:-1]
 
-        Other - Omar
-            Manager and provider access codes 
-    '''
+        userPass = data.split(":")
+        managerPasses[userPass[0]] = userPass[1]
 
-    print("Welcome to ChocAn!")
-    running = True
-    while (running):
-       # print(members[1].number)
-        manager_mode = manager(providers, members, records)
-        print("\nOptions:")
-        print("1: Manager Mode")
-        print("2: Provider Mode")
-        print("3: Quit")
 
-        choice = int(input("Select your mode: "))
+    for data in providerData:
+        if (data[-1] == '\n'):
+            data = data[:-1]
 
-        if (choice == 1):
-            manager_mode.welcome()
-
-        elif (choice == 2):
-            providerMode()
-
-        elif (choice == 3):
-            print("\nExiting terminal...\nSee you again soon!\n")
-            running = False
-
-        else:
-            print("Invalid option selected.\n")
-
+        userPass = data.split(":")
+        providerPasses[int(userPass[0])] = userPass[1]
+    
     return
 
+def main():
+    try:
+        addFiles()
+        getPasses()
+    except Exception as e:
+        print(f"Unable to initialize due to error ({e})")
+        exit(1)
+
+    try:
+        terminal = Terminal(records, services, members, providers, managerPasses, providerPasses)
+        terminal.run()
+    except Exception as e:
+            print(f"Unable to run due to error ({e})")
 
 if __name__ == "__main__":
     main()

@@ -13,8 +13,8 @@ class Member():
         self.zipCode = None
         self.status = inStatus
 
-        if (inName == None or inNumber == None or inAddress == None or inCity == None
-            or inState == None or inZip == None or inStatus == None):
+        if (inName == None and inNumber == None and inAddress == None and inCity == None
+            and inState == None and inZip == None and inStatus == None):
                 return
 
         ret = True
@@ -32,7 +32,7 @@ class Member():
     def setName(self, inName: str) -> bool:
         if (len(inName) > 25):
             print("Name must be <= 25 characters!")
-            return False
+            raise ValueError
 
         self.name = inName
         return True
@@ -41,7 +41,7 @@ class Member():
     def setNumber(self, inNumber: int) -> bool:
         if (0 > inNumber or inNumber > 999999999):
             print("Member number must be maximum 9 digits long!")
-            return False
+            raise ValueError
 
         self.number = inNumber
         return True
@@ -50,7 +50,7 @@ class Member():
     def setAddr(self, inAddr: str) -> bool:
         if (len(inAddr) > 25):
             print("Address must be <= 25 characters!")
-            return False
+            raise ValueError
 
         self.address = inAddr
         return True
@@ -59,7 +59,7 @@ class Member():
     def setCity(self, inCity: str) -> bool:
         if (len(inCity) > 14):
             print("City must be <= 14 characters!")
-            return False
+            raise ValueError
         self.city = inCity
         return True
 
@@ -67,7 +67,7 @@ class Member():
     def setState(self, inState: str) -> bool:
         if (len(inState) != 2):
             print("State must be 2 characters long (abbreviation)!")
-            return False
+            raise ValueError
         self.state = inState
         return True
 
@@ -75,7 +75,7 @@ class Member():
     def setZip(self, inZip: int) -> bool:
         if (0 > inZip or inZip > 99999):
             print("Zip code must be 5 digits long!")
-            return False
+            raise ValueError
 
         self.zipCode = inZip
         return True
@@ -85,4 +85,19 @@ class Member():
         if (not isinstance(inStatus, bool)):
             raise TypeError
         self.status = inStatus
+        return
+    
+    def display(self):
+        print("\nMember Information:")
+        print(f"Name: {self.name}")
+        print(f"Number: {self.number}")
+        print(f"Address: {self.address}")
+        print(f"City: {self.city}")
+        print(f"State: {self.state}")
+        print(f"Zip: {self.zipCode}")
+        if (self.status == False):
+            print("Status: Suspended")
+        else:
+            print("Status: Validated")
+
         return
