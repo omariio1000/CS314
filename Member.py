@@ -32,7 +32,7 @@ class Member():
     def setName(self, inName: str) -> bool:
         if (len(inName) > 25):
             print("Name must be <= 25 characters!")
-            return False
+            raise ValueError
 
         self.name = inName
         return True
@@ -41,7 +41,7 @@ class Member():
     def setNumber(self, inNumber: int) -> bool:
         if (0 > inNumber or inNumber > 999999999):
             print("Member number must be maximum 9 digits long!")
-            return False
+            raise ValueError
 
         self.number = inNumber
         return True
@@ -67,7 +67,7 @@ class Member():
     def setState(self, inState: str) -> bool:
         if (len(inState) != 2):
             print("State must be 2 characters long (abbreviation)!")
-            return False
+            raise ValueError
         self.state = inState
         return True
 
@@ -75,7 +75,7 @@ class Member():
     def setZip(self, inZip: int) -> bool:
         if (0 > inZip or inZip > 99999):
             print("Zip code must be 5 digits long!")
-            return False
+            raise ValueError
 
         self.zipCode = inZip
         return True

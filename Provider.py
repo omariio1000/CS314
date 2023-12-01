@@ -17,7 +17,7 @@ class Provider(Member):
             return True
         else:
             print("Already offering this service.")
-            return False
+            raise ValueError
 
     def removeService(self, inServiceCode: int) -> bool:
         if (inServiceCode < 0 or inServiceCode > 999999999):
@@ -29,7 +29,7 @@ class Provider(Member):
             return True
         else:
             print("The provider doesn't offer this service.")
-            return False
+            raise ValueError
 
     def display(self):
         print("\nProvider Information:")

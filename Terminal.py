@@ -1065,13 +1065,12 @@ class Terminal():
     def getProviderRecords(self, providerID, currentDate):
         # Filter self.records for the last week for a specific provider
         providerRecords = [record for record in self.records if record.providerID == providerID
-                            and currentDate - timedelta(days=7) <= record.serviceDate <= currentDate]
-
+                            and currentDate - timedelta(days=7) <= record.currentTime <= currentDate]
         return providerRecords
 
     def getMemberRecords(self, memberID, currentDate):
         # Filter self.records for the last week for a specific member
         memberRecords = [record for record in self.records if record.memberID == memberID
-                            and currentDate - timedelta(days=7) <= record.serviceDate <= currentDate]
+                            and currentDate - timedelta(days=7) <= record.currentTime <= currentDate]
 
         return memberRecords

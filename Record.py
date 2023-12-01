@@ -46,7 +46,7 @@ class Record():
     def setDate(self, inDate: datetime) -> bool:
         if (inDate == None):
             print("Invalid date!")
-            return False
+            raise ValueError
         elif not isinstance(inDate, datetime):
                   raise TypeError
         
@@ -56,7 +56,7 @@ class Record():
     def setProv(self, inProv: int) -> bool:
         if (0 > inProv or inProv > 999999999):
             print("Provider ID must be 9 digits long!")
-            return False
+            raise ValueError
         
         self.providerID = inProv
         return True
@@ -64,7 +64,7 @@ class Record():
     def setMem(self, inMem: int) -> bool:
         if (0 > inMem or inMem > 999999999):
             print("Member ID must be 9 digits long!")
-            return False
+            raise ValueError
         
         self.memberID = inMem
         return True
@@ -72,7 +72,7 @@ class Record():
     def setCode(self, inCode: int) -> bool:
         if (0 > inCode or inCode > 999999999):
             print("Service code must be 9 digits long!")
-            return False
+            raise ValueError
         
         self.serviceCode = inCode
         return True
@@ -80,10 +80,10 @@ class Record():
     def setBill(self, inBill: float) -> bool:
         if (0 > inBill or inBill > 999.99):
             print("Can't charge them that much!")
-            return False
+            raise ValueError
         elif (inBill < 0):
             print("You can't pay them!")
-            return False
+            raise ValueError
         
         self.bill = inBill
         return True
@@ -95,7 +95,7 @@ class Record():
         
         if (len(inComments) > 100):
             print("Max length of comments is 100!")
-            return False
+            raise ValueError
         
         self.comments = inComments
         return True
