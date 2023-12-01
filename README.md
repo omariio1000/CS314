@@ -1,4 +1,4 @@
-# CS314 - Chocaholics Anonymous
+# CS314 - Chocoholics Anonymous
 
 ## Manager Mode
 
