@@ -361,7 +361,7 @@ class Terminal():
             for user, password in self.providerPasses.items():
                 file.write(f"{user:09d}:{password}\n")
 
-    def updateAdminPassword(self, user: str):
+    def updateManagerPassword(self, user: str):
         newUser = True
         if (self.managerPasses.get(user) is not None):
             newUser = False
@@ -374,7 +374,7 @@ class Terminal():
             password = encrypt(password)
             self.managerPasses[user] = password
             if (newUser):
-                print(f"\nAdmin \"{user}\" added successfully!")
+                print(f"\nManager \"{user}\" added successfully!")
             else:
                 print(f"\nPassword for \"{user}\" changed successfully!")
         except Exception as e:
@@ -427,7 +427,7 @@ class Terminal():
 
             print("14: Change your password")
             print("15: Change provider password")
-            print("16: Add new admin user")
+            print("16: Add new manager")
 
             print("17: Log out")
 
@@ -477,7 +477,7 @@ class Terminal():
                 self.generateReports()
 
             elif (choice == 14):
-                self.updateAdminPassword(userName)
+                self.updateManagerPassword(userName)
 
             elif (choice == 15):
                 try:
@@ -492,9 +492,9 @@ class Terminal():
             elif (choice == 16):
                 user = input("\nEnter a new username: ")
                 if (self.managerPasses.get(user) is None):
-                    self.updateAdminPassword(user)
+                    self.updateManagerPassword(user)
                 else:
-                    print("Already have an admin with that username!")
+                    print("Already have a manager with that username!")
 
             elif (choice == 17):
                 running = False

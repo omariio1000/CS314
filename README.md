@@ -8,7 +8,7 @@ Default manager usernames and passwords:
   * admin: "admin"
   * manager: "manager"
 
-New admin users can be created in admin mode, and passwords can be changed.
+New manager users can be created in manager mode, and passwords can be changed.
 
 ### Functions
 
@@ -39,11 +39,11 @@ These reports are collected a week from the date when the report is generated.
 
 **Change Account Password**
 
-Change the password for the admin that is currently logged in. Allows user to view the password before deciding whether or not to change it.
+Change the password for the manager that is currently logged in. Allows user to view the password before deciding whether or not to change it.
 
-**Add New Admin**
+**Add New Manager**
 
-Add a new admin and set their password.
+Add a new manager and set their password.
 
 **Change Provider Password**
 
@@ -52,7 +52,7 @@ Change the password for any provider. Allows user to view the password before de
 ## Provider Mode
 
 ### Default Passwords
-All newly created providers have default password of "password". These can be changed by an admin or a provider.
+All newly created providers have default password of "password". These can be changed by an manager or a provider.
 
 ### Functions
 
