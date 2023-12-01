@@ -54,11 +54,12 @@ class Terminal():
 
             elif (choice == 2):
                 provNum = 0
+                provPass = 0
                 try:
                     provNum = int(input("\nEnter your provider ID: "))
+                    provPass = input("Enter your password: ")
                 except:
                     print("\nOnly numeric characters allowed!")
-                provPass = input("Enter your password: ")
 
                 try:
                     if (self.providerPasses[provNum] == encrypt(provPass)):
@@ -243,7 +244,7 @@ class Terminal():
             found = False
 
             for record in self.records:
-                if (recordDate == record.currentTime ):
+                if (recordDate == record.currentTime):
                     found = True
                     record.display()
 
@@ -318,7 +319,7 @@ class Terminal():
             found = False
 
             for record in self.records:
-                if (recordDate == record.currentTime ):
+                if (recordDate == record.currentTime):
                     found = True
                     record.display()
 
